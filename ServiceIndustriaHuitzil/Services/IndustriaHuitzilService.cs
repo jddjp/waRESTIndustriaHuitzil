@@ -84,7 +84,7 @@ namespace ServiceIndustriaHuitzil.Services
                     dataLogin.impresora = existeUsuario.impresora;
 
                     respuesta.exito = true;
-                    respuesta.mensaje = "Credenciales correctas!z!";
+                    respuesta.mensaje = "Credenciales correctas!";
                     respuesta.respuesta = dataLogin;
                 }
 

@@ -3986,5 +3986,34 @@ namespace ServiceIndustriaHuitzil.Services
         }
 
         #endregion
+
+        #region Movimientos
+        public async Task<ResponseModel> getMovimientos()
+        {
+            ResponseModel response = new ResponseModel();
+            try
+            {
+                response.exito = false;
+                response.mensaje = "No hay Movimientos  para mostrar";
+                response.respuesta = "[]";
+                List<MovimientosInventario> lista = _ctx.MovimientosInventario.ToList();
+                if (lista != null)
+                {
+                    response.exito = true;
+                    response.mensaje = "Se han consultado exitosamente los Movimientos de Inventarios!!";
+                    response.respuesta = lista;
+                }
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e.Message);
+                response.mensaje = e.Message;
+                response.exito = false;
+                response.respuesta = "[]";
+            }
+            return response; ;
+        }
+        #endregion
+
     }
 }

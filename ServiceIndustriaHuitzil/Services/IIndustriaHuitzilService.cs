@@ -162,6 +162,11 @@ namespace ServiceIndustriaHuitzil.Services
         //Task<ResponseModel> putCambiosyDevoluciones(CambiosDevolucionesRequest cambiosDevoluciones);
         #endregion
 
+        #region Movimientos
+        Task<ResponseModel> getMovimientos();
+
+        #endregion
+
 
     }
 }

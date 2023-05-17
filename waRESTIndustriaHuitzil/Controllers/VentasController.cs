@@ -14,7 +14,21 @@ namespace waRESTIndustriaHuitzil.Controllers
         public VentasController(IIndustriaHuitzilService service) => _service = service;
 
         #region Caja
-        [HttpGet("Cash/Consulta")]
+        [HttpGet("Cash/Cajas")]
+        [Authorize(AuthenticationSchemes = Microsoft.AspNetCore.Authentication.JwtBearer.JwtBearerDefaults.AuthenticationScheme)]
+        public async Task<IActionResult> GetCaja()
+        {
+            return Ok(await _service.getCajaDate());
+        }
+
+        [HttpGet("Cash/CajasDate")]
+        [Authorize(AuthenticationSchemes = Microsoft.AspNetCore.Authentication.JwtBearer.JwtBearerDefaults.AuthenticationScheme)]
+        public async Task<IActionResult> GetCaja(DateTime dateI, DateTime dateF)
+        {
+            return Ok(await _service.getCajaDate(dateI,dateF));
+        }
+       
+    [HttpGet("Cash/Consulta")]
         [Authorize(AuthenticationSchemes = Microsoft.AspNetCore.Authentication.JwtBearer.JwtBearerDefaults.AuthenticationScheme)]
         public async Task<IActionResult> GetCaja(int param)
         {
@@ -80,6 +94,15 @@ namespace waRESTIndustriaHuitzil.Controllers
         {
             return Ok(await _service.getVentasByDates(dateI,dateF));
         }
+
+
+        [HttpGet("SalesByCajas")]
+        [Authorize(AuthenticationSchemes = Microsoft.AspNetCore.Authentication.JwtBearer.JwtBearerDefaults.AuthenticationScheme)]
+        public async Task<IActionResult> GetVentasByCaja(int idCaja)
+        {
+            return Ok(await _service.getVentasByCaja(idCaja));
+        }
+
         #endregion
 
     }

@@ -3,6 +3,7 @@ using AccessControl.Models;
 using CoreIndustriaHuitzil.Models;
 using CoreIndustriaHuitzil.ModelsRequest;
 using CoreIndustriaHuitzil.ModelsResponse;
+using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using System.Data;
@@ -84,7 +85,7 @@ namespace ServiceIndustriaHuitzil.Services
                     dataLogin.impresora = existeUsuario.impresora;
 
                     respuesta.exito = true;
-                    respuesta.mensaje = "Credenciales correctas!";
+                    respuesta.mensaje = "Credenciales correctas!!";
                     respuesta.respuesta = dataLogin;
                 }
 
@@ -332,6 +333,60 @@ namespace ServiceIndustriaHuitzil.Services
         #endregion
 
         #region Caja
+        public async Task<ResponseModel> getCajaDate()
+        {
+            ResponseModel response = new ResponseModel();
+            try
+            {
+                response.exito = false;
+                response.mensaje = "No hay una caja para mostrar";
+                response.respuesta = "[]";
+                List<Caja> cajas = await _ctx.Cajas.Include(c => c.IdEmpleadoNavigation).OrderByDescending(x => x.Fecha).ToListAsync();
+                if (cajas != null)
+                {
+                    response.exito = true;
+                    response.mensaje = "Se han consultado exitosamente las cajas!!";
+                    response.respuesta = cajas;
+                }
+
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e.Message);
+                response.mensaje = e.Message;
+                response.exito = false;
+                response.respuesta = "[]";
+            }
+            return response;
+        }
+
+        public async Task<ResponseModel> getCajaDate(DateTime dateI, DateTime dateF)
+        {
+            ResponseModel response = new ResponseModel();
+            try
+            {
+                response.exito = false;
+                response.mensaje = "No hay una caja para mostrar";
+                response.respuesta = "[]";
+                List<Caja> cajas = await _ctx.Cajas.Where(x => x.Fecha >= dateI && x.Fecha <= dateF).Include(c => c.IdEmpleadoNavigation).OrderByDescending(x => x.Fecha).ToListAsync();
+                if (cajas != null)
+                {
+                    response.exito = true;
+                    response.mensaje = "Se han consultado exitosamente las cajas!!";
+                    response.respuesta = cajas;
+                }
+
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e.Message);
+                response.mensaje = e.Message;
+                response.exito = false;
+                response.respuesta = "[]";
+            }
+            return response;
+        }
+
         public async Task<ResponseModel> getCaja(int idUser)
         {
             ResponseModel response = new ResponseModel();
@@ -500,7 +555,7 @@ namespace ServiceIndustriaHuitzil.Services
                         Articulo = new ProductoRequest()
                         {
                             IdArticulo = x.IdArticulo,
-                            Unidad = x.IdArticuloNavigation.Unidad,
+                            Status = x.IdArticuloNavigation.Status,
                             Existencia = x.IdArticuloNavigation.Existencia,
                             Descripcion = x.IdArticuloNavigation.Descripcion,
                             FechaIngreso = (DateTime)x.IdArticuloNavigation.FechaIngreso,
@@ -587,7 +642,7 @@ namespace ServiceIndustriaHuitzil.Services
                             Articulo = new ProductoRequest()
                             {
                                 IdArticulo = x.IdArticuloNavigation.IdArticulo,
-                                Unidad = x.IdArticuloNavigation.Unidad,
+                                Status = x.IdArticuloNavigation.Status,
                                 Existencia = x.IdArticuloNavigation.Existencia,
                                 Descripcion = x.IdArticuloNavigation.Descripcion,
                                 FechaIngreso = (DateTime)x.IdArticuloNavigation.FechaIngreso,
@@ -612,7 +667,7 @@ namespace ServiceIndustriaHuitzil.Services
                                 Articulo = new ProductoRequest()
                                 {
                                     IdArticulo = x.IdVentaArticuloNavigation.IdArticuloNavigation.IdArticulo,
-                                    Unidad = x.IdVentaArticuloNavigation.IdArticuloNavigation.Unidad,
+                                    Status = x.IdVentaArticuloNavigation.IdArticuloNavigation.Status,
                                     Existencia = x.IdVentaArticuloNavigation.IdArticuloNavigation.Existencia,
                                     Descripcion = x.IdVentaArticuloNavigation.IdArticuloNavigation.Descripcion,
                                     FechaIngreso = (DateTime)x.IdVentaArticuloNavigation.IdArticuloNavigation.FechaIngreso,
@@ -1874,7 +1929,7 @@ namespace ServiceIndustriaHuitzil.Services
                                                    .ConvertAll(u => new ProductoRequest()
                                                    {
                                                        IdArticulo=u.IdArticulo,
-                                                       Unidad=u.Unidad,
+                                                       Status=u.Status,
                                                        Existencia=u.Existencia,
                                                        Descripcion=u.Descripcion,
                                                        FechaIngreso=(DateTime)u.FechaIngreso,
@@ -1896,7 +1951,7 @@ namespace ServiceIndustriaHuitzil.Services
                                                    .ConvertAll(u => new ProductoRequest()
                                                    {
                                                        IdArticulo = u.IdArticulo,
-                                                       Unidad = u.Unidad,
+                                                       Status = u.Status,
                                                        Existencia = u.Existencia,
                                                        Descripcion = u.Descripcion,
                                                        FechaIngreso = (DateTime)u.FechaIngreso,
@@ -1945,7 +2000,7 @@ namespace ServiceIndustriaHuitzil.Services
                                                    .ConvertAll(u => new ProductoRequest()
                                                    {
                                                        IdArticulo = u.IdArticulo,
-                                                       Unidad = u.Unidad,
+                                                       Status = u.Status,
                                                        Existencia = u.Existencia,
                                                        Descripcion = u.Descripcion,
                                                        FechaIngreso = (DateTime)u.FechaIngreso,
@@ -1967,7 +2022,7 @@ namespace ServiceIndustriaHuitzil.Services
                                                    .ConvertAll(u => new ProductoRequest()
                                                    {
                                                        IdArticulo = u.IdArticulo,
-                                                       Unidad = u.Unidad,
+                                                       Status = u.Status,
                                                        Existencia = u.Existencia,
                                                        Descripcion = u.Descripcion,
                                                        FechaIngreso = (DateTime)u.FechaIngreso,
@@ -2013,10 +2068,14 @@ namespace ServiceIndustriaHuitzil.Services
                 Articulo existeArticulo = _ctx.Articulos.FirstOrDefault(x => x.IdArticulo == request.IdArticulo);
                 if (existeArticulo != null)
                 {
-                    existeArticulo.Unidad = request.Unidad;
+                    //Sumar
+                    int result = Int32.Parse(existeArticulo.Existencia) + Int32.Parse(request.Existencia);
+                    //
+
+                    existeArticulo.Status = request.Status;
                     existeArticulo.Descripcion = request.Descripcion;
                     existeArticulo.FechaIngreso = request.FechaIngreso;
-                    existeArticulo.Existencia = request.Existencia;
+                    existeArticulo.Existencia = result.ToString();
                     existeArticulo.IdUbicacion = request.idUbicacion;
                     existeArticulo.IdCategoria = request.idCategoria;
                     existeArticulo.IdTalla = request.idTalla;
@@ -2034,7 +2093,7 @@ namespace ServiceIndustriaHuitzil.Services
                 }
                 else {
                     Articulo newArticulo = new Articulo();
-                    newArticulo.Unidad = request.Unidad;
+                    newArticulo.Status = request.Status;
                     newArticulo.Descripcion = request.Descripcion;
                     newArticulo.FechaIngreso = request.FechaIngreso;
                     newArticulo.Existencia = request.Existencia;
@@ -2077,7 +2136,7 @@ namespace ServiceIndustriaHuitzil.Services
                 Articulo existeArticulo = _ctx.Articulos.FirstOrDefault(x => x.IdArticulo == request.IdArticulo);
                 if (existeArticulo != null)
                 {
-                    existeArticulo.Unidad = request.Unidad;
+                    existeArticulo.Status = request.Status;
                     existeArticulo.Descripcion = request.Descripcion;
                     existeArticulo.FechaIngreso = request.FechaIngreso;
                     existeArticulo.Existencia = request.Existencia;
@@ -2178,7 +2237,7 @@ namespace ServiceIndustriaHuitzil.Services
                         allResults.Add(new ProductoRequest()
                         {
                             IdArticulo = product.IdArticulo,
-                            Unidad = product.Unidad,
+                            Status = product.Status,
                             Existencia = product.Existencia,
                             Descripcion = product.Descripcion,
                             FechaIngreso = (DateTime)product.FechaIngreso,
@@ -2200,7 +2259,7 @@ namespace ServiceIndustriaHuitzil.Services
                             allResults.Add(new ProductoRequest()
                             {
                                 IdArticulo = product.IdArticulo,
-                                Unidad = product.Unidad,
+                                Status = product.Status,
                                 Existencia = product.Existencia,
                                 Descripcion = product.Descripcion,
                                 FechaIngreso = (DateTime)product.FechaIngreso,
@@ -2229,6 +2288,96 @@ namespace ServiceIndustriaHuitzil.Services
             }
             return response;
         }
+
+
+        public async Task<ResponseModel> SearchProductFilterUbicacion( string sucursal)
+        {
+            ResponseModel response = new ResponseModel();
+            try
+            {
+                response.exito = false;
+                response.mensaje = "No hay productos relacionados con la busqueda";
+                response.respuesta = "[]";
+
+                List<ProductoRequest> allResults = new List<ProductoRequest>();
+                List<Articulo> resultsByName = new List<Articulo>();
+                List<Articulo> resultsBySku = new List<Articulo>();
+
+                if (sucursal == "all")
+                {
+                    resultsByName = _ctx.Articulos.Include(a => a.IdTallaNavigation).Include(b => b.IdCategoriaNavigation).Include(c => c.IdUbicacionNavigation)
+                                                .ToList();
+
+                    resultsBySku = _ctx.Articulos.Include(a => a.IdTallaNavigation).Include(b => b.IdCategoriaNavigation).Include(c => c.IdUbicacionNavigation)
+                                                 .ToList();
+                }
+                resultsByName = _ctx.Articulos.Include(a => a.IdTallaNavigation).Include(b => b.IdCategoriaNavigation).Include(c => c.IdUbicacionNavigation)
+                                                .Where(x =>  x.IdUbicacionNavigation.Direccion == sucursal).ToList();
+                    resultsBySku = _ctx.Articulos.Include(a => a.IdTallaNavigation).Include(b => b.IdCategoriaNavigation).Include(c => c.IdUbicacionNavigation)
+                                                .Where(x => x.IdUbicacionNavigation.Direccion == sucursal).ToList();
+                
+
+                if (resultsByName.Count() > 0 || resultsBySku.Count() > 0)
+                {
+                    resultsBySku.ForEach(product =>
+                    {
+                        allResults.Add(new ProductoRequest()
+                        {
+                            IdArticulo = product.IdArticulo,
+                            Status = product.Status,
+                            Existencia = product.Existencia,
+                            Descripcion = product.Descripcion,
+                            FechaIngreso = (DateTime)product.FechaIngreso,
+                            idTalla = (int)product.IdTalla,
+                            idCategoria = (int)product.IdCategoria,
+                            idUbicacion = (int)product.IdUbicacion,
+                            imagen = product.Imagen,
+                            talla = product.IdTallaNavigation.Nombre,
+                            ubicacion = product.IdUbicacionNavigation.Direccion,
+                            categoria = product.IdCategoriaNavigation.Descripcion,
+                            precio = (int)product.Precio,
+                            sku = product.Sku
+                        });
+                    });
+                    resultsByName.ForEach(product =>
+                    {
+                        if (allResults.Find(x => x.IdArticulo == product.IdArticulo) == null)
+                        {
+                            allResults.Add(new ProductoRequest()
+                            {
+                                IdArticulo = product.IdArticulo,
+                                Status = product.Status,
+                                Existencia = product.Existencia,
+                                Descripcion = product.Descripcion,
+                                FechaIngreso = (DateTime)product.FechaIngreso,
+                                idTalla = (int)product.IdTalla,
+                                idCategoria = (int)product.IdCategoria,
+                                idUbicacion = (int)product.IdUbicacion,
+                                imagen = product.Imagen,
+                                talla = product.IdTallaNavigation.Nombre,
+                                ubicacion = product.IdUbicacionNavigation.Direccion,
+                                categoria = product.IdCategoriaNavigation.Descripcion,
+                                precio = (int)product.Precio,
+                                sku = product.Sku
+                            });
+                        }
+                    });
+                    response.exito = true;
+                    response.mensaje = "Se obtuvieron las coincidencias relacionadas con el filtro!!";
+                    response.respuesta = allResults;
+                }
+            }
+            catch (Exception e)
+            {
+                response.mensaje = e.Message;
+                response.exito = false;
+                response.respuesta = "[]";
+            }
+            return response;
+        }
+
+
+        
         #endregion
 
         #region ProveedoresMateriales
@@ -3578,8 +3727,10 @@ namespace ServiceIndustriaHuitzil.Services
                             newVenta.NoArticulos = request.NoArticulos;
                             newVenta.Subtotal = request.Subtotal;
                             newVenta.Total = request.Total;
+                            newVenta.Tarjeta = request.Tarjeta;
+                            newVenta.Efectivo = request.Efectivo;
 
-                            _ctx.Add(newVenta);
+                        _ctx.Add(newVenta);
                          await _ctx.SaveChangesAsync();
                         int idVenta = newVenta.IdVenta; // recuperar
 
@@ -3691,7 +3842,8 @@ namespace ServiceIndustriaHuitzil.Services
                         NoArticulos = x.NoArticulos,
                         Subtotal = x.Subtotal,
                         Total = x.Total,
-                          
+                        Tarjeta = x.Tarjeta,
+                        Efectivo = x.Efectivo,
                     }
                   
                     );
@@ -3719,7 +3871,6 @@ namespace ServiceIndustriaHuitzil.Services
 
                 List<VentaRequest> listaVentas = new List<VentaRequest>();
                 List<Venta> lista = _ctx.Ventas.Where(x => x.Fecha >= dateI && x.Fecha <= dateF).ToList();
-                List<VentaArticulo> articulosVendidos = new List<VentaArticulo>();
                 if (lista != null)
                 {
                     response.exito = true;
@@ -3735,10 +3886,92 @@ namespace ServiceIndustriaHuitzil.Services
                         NoArticulos = x.NoArticulos,
                         Subtotal = x.Subtotal,
                         Total = x.Total,
-
+                        Tarjeta = x.Tarjeta,
+                        Efectivo = x.Efectivo,
                     }
 
                     );
+
+                    response.respuesta = listaVentas;
+                }
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e.Message);
+                response.mensaje = e.Message;
+                response.exito = false;
+                response.respuesta = "[]";
+            }
+            return response;
+        }
+
+        public async Task<ResponseModel> getVentasByCaja(int idCaja)
+        {
+            ResponseModel response = new ResponseModel();
+            try
+            {
+                response.exito = false;
+                response.mensaje = "No hay ventas para mostrar";
+                response.respuesta = "[]";
+
+                List<VentaRequest> listaVentas = new List<VentaRequest>();
+                List<Venta> lista = _ctx.Ventas.Where(x => x.IdCaja == idCaja).ToList();
+               
+                if (lista != null)
+                {
+
+                    response.exito = true;
+                    response.mensaje = "Se han consultado exitosamente las Ventas!!";
+                    listaVentas = lista.ConvertAll(x => new VentaRequest()
+                    {
+                        IdVenta = x.IdVenta,
+                        IdCaja = x.IdCaja,
+                        Fecha = x.Fecha.ToString(),
+                        NoTicket = x.NoTicket,
+                        TipoPago = x.TipoPago,
+                        TipoVenta = x.TipoVenta,
+                        NoArticulos = x.NoArticulos,
+                        Subtotal = x.Subtotal,
+                        Tarjeta = x.Tarjeta,
+                        Efectivo = x.Efectivo,
+                        Total = x.Total,
+
+                    }
+                    ); 
+                    listaVentas.ForEach(venta => {
+                        List<VentaArticulo> articulosVenta = _ctx.VentaArticulos.Include(w => w.IdArticuloNavigation)
+                                                                            .Include(wa => wa.IdArticuloNavigation.IdUbicacionNavigation)
+                                                                            .Include(wb => wb.IdArticuloNavigation.IdCategoriaNavigation)
+                                                                            .Include(wc => wc.IdArticuloNavigation.IdTallaNavigation)
+                                                                            .Where(x => x.IdVenta == venta.IdVenta).ToList();
+                        venta.ventaArticulo  = articulosVenta.ConvertAll(x => new VentaArticuloRequest()
+                        {
+                            IdVentaArticulo = x.IdVentaArticulo,
+                            IdVenta = x.IdVenta,
+                            IdArticulo = x.IdArticulo,
+                            Cantidad = x.Cantidad,
+                            PrecioUnitario = x.PrecioUnitario,
+                            Subtotal = x.Subtotal,
+                            Articulo = new ProductoRequest()
+                            {
+                                IdArticulo = x.IdArticulo,
+                                Status = x.IdArticuloNavigation.Status,
+                                Existencia = x.IdArticuloNavigation.Existencia,
+                                Descripcion = x.IdArticuloNavigation.Descripcion,
+                                FechaIngreso = (DateTime)x.IdArticuloNavigation.FechaIngreso,
+                                idUbicacion = (int)x.IdArticuloNavigation.IdUbicacion,
+                                idCategoria = (int)x.IdArticuloNavigation.IdCategoria,
+                                idTalla = (int)x.IdArticuloNavigation.IdTalla,
+                                talla = x.IdArticuloNavigation.IdTallaNavigation.Descripcion,
+                                categoria = x.IdArticuloNavigation.IdCategoriaNavigation.Descripcion,
+                                ubicacion = x.IdArticuloNavigation.IdUbicacionNavigation.Direccion,
+                                sku = x.IdArticuloNavigation.Sku,
+                                precio = (int)x.IdArticuloNavigation.Precio,
+                                imagen = x.IdArticuloNavigation.Imagen
+                            }
+                        });
+
+                    });
                     response.respuesta = listaVentas;
                 }
             }

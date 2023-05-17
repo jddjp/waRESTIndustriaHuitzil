@@ -24,6 +24,8 @@ namespace ServiceIndustriaHuitzil.Services
 
         #endregion
         #region Caja
+        Task<ResponseModel> getCajaDate();
+        Task<ResponseModel> getCajaDate(DateTime dateI, DateTime dateF);
         Task<ResponseModel> getCaja(int idUser);
         Task<ResponseModel> openCaja(CajaRequest request);
         Task<ResponseModel> closeCaja(CajaRequest request);
@@ -85,6 +87,9 @@ namespace ServiceIndustriaHuitzil.Services
         Task<ResponseModel> deleteProductos(ProductoRequest producto);
 
         Task<ResponseModel> searchProduct(string queryString, string sucursal);
+
+        Task<ResponseModel> SearchProductFilterUbicacion( string sucursal);
+        
         #endregion
 
         #region ProveedoresMateriales
@@ -153,6 +158,7 @@ namespace ServiceIndustriaHuitzil.Services
         Task<ResponseModel> postAddVentas(VentaRequest venta);
         Task<ResponseModel> getVentas();
         Task<ResponseModel> getVentasByDates(DateTime dateI , DateTime dateF);
+        Task<ResponseModel> getVentasByCaja(int idCaja);
         //Task<ResponseModel> putCambiosyDevoluciones(CambiosDevolucionesRequest cambiosDevoluciones);
         #endregion
 

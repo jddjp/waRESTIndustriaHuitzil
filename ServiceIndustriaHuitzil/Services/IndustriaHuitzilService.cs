@@ -3997,7 +3997,7 @@ namespace ServiceIndustriaHuitzil.Services
                 response.mensaje = "No hay Movimientos  para mostrar";
                 response.respuesta = "[]";
                 List<MovimientoInvetarioRequest> movimientos = new List<MovimientoInvetarioRequest>();
-                movimientos = _ctx.MovimientosInventario.Include(b => b.IdUbicacionNavigation).Include(c=>c.IdUserEnvioNavigation)/*.Include(d => d.IdUserRecibeNavigation)*/.ToList()
+                movimientos = _ctx.MovimientosInventario.Include(b => b.IdUbicacionNavigation).Include(c=>c.IdUserEnvioNavigation).Include(d => d.IdUserRecibeNavigation).ToList()
                     .ConvertAll(u => new MovimientoInvetarioRequest(){ 
                         IdMovimiento = u.IdMovimiento,
                         Fecha = u.Fecha,
@@ -4006,8 +4006,8 @@ namespace ServiceIndustriaHuitzil.Services
                         Receptor = u.Receptor,
                         Direccion = u.IdUbicacionNavigation.Direccion,
                         UsuarioEnvia = u.IdUserEnvioNavigation.Nombre + " "+ u.IdUserEnvioNavigation.ApellidoPaterno,
-                        //UsuarioRecibe = u.IdUserRecibeNavigation.Nombre
-                      
+                        UsuarioRecibe = u.IdUserRecibeNavigation.Nombre + " " + u.IdUserRecibeNavigation.ApellidoPaterno
+
                     })
                     ;
                 if (movimientos != null)
@@ -4048,7 +4048,6 @@ namespace ServiceIndustriaHuitzil.Services
                         Descripcion = u.Descripcion,
                         FechaIngreso = u .FechaIngreso,
                         ubicacion = u.IdUbicacionNavigation.Direccion
-                        //UsuarioRecibe = u.IdUserRecibeNavigation.Nombre
 
                     })
                     ;

@@ -12,10 +12,9 @@ namespace CoreIndustriaHuitzil.Models
         public int Ubicacion { get; set; }
         public int Usuario { get; set; }
         public string Status { get; set; }
-        public string Receptor { get; set; }
+        public int Receptor { get; set; }
         public virtual CatUbicacione? IdUbicacionNavigation { get; set; }
         public virtual User? IdUserEnvioNavigation { get; set; }
-        
-        //public virtual User? IdUserRecibeNavigation { get; set; }
+        public virtual User? IdUserRecibeNavigation { get; set; }
     }
 }

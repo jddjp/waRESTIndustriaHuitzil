@@ -883,10 +883,10 @@ namespace CoreIndustriaHuitzil.Models
                     .WithMany(p => p.MovimientosInventariosEnvio)
                     .HasForeignKey(d => d.Usuario)
                     .HasConstraintName("FK_Movimientos_Envio");
-                /*entity.HasOne(d => d.IdUserRecibeNavigation)
+                entity.HasOne(d => d.IdUserRecibeNavigation)
                     .WithMany(p => p.MovimientosInventariosRecibe)
                     .HasForeignKey(d => d.Receptor)
-                    .HasConstraintName("FK_Movimientos_Recibe");*/
+                    .HasConstraintName("FK_Movimientos_Recibe");
             });
 
             modelBuilder.Entity<MovimientoArticulos>(entity =>

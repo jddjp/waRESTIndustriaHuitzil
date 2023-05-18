@@ -875,10 +875,18 @@ namespace CoreIndustriaHuitzil.Models
             {
                 entity.HasKey(e => e.IdMovimiento);
                 entity.Property(e => e.IdMovimiento).HasColumnName("id_movimiento");
-                
-
-
-
+                entity.HasOne(d => d.IdUbicacionNavigation)
+                    .WithMany(p => p.MovimientosInventarios)
+                    .HasForeignKey(d => d.Ubicacion)
+                    .HasConstraintName("FK_Movimientos_Ubicaciones");
+                entity.HasOne(d => d.IdUserEnvioNavigation)
+                    .WithMany(p => p.MovimientosInventariosEnvio)
+                    .HasForeignKey(d => d.Usuario)
+                    .HasConstraintName("FK_Movimientos_Envio");
+                /*entity.HasOne(d => d.IdUserRecibeNavigation)
+                    .WithMany(p => p.MovimientosInventariosRecibe)
+                    .HasForeignKey(d => d.Receptor)
+                    .HasConstraintName("FK_Movimientos_Recibe");*/
             });
 
             modelBuilder.Entity<MovimientoArticulos>(entity =>
@@ -892,7 +900,7 @@ namespace CoreIndustriaHuitzil.Models
                 entity.Property(e => e.IdCategoria).HasColumnName("id_categoria");
                 entity.Property(e => e.IdTalla).HasColumnName("id_talla");
                 entity.Property(e => e.FechaIngreso).HasColumnName("fecha_ingreso");
-
+    
             });
 
             OnModelCreatingPartial(modelBuilder);

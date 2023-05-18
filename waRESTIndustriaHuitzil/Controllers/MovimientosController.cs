@@ -22,6 +22,15 @@ namespace waRESTIndustriaHuitzil.Controllers
             return Ok(await _service.getMovimientos());
         }
 
+        [HttpGet("MovimientosArticulos")]
+        [Authorize(AuthenticationSchemes = Microsoft.AspNetCore.Authentication.JwtBearer.JwtBearerDefaults.AuthenticationScheme)]
+        public async Task<IActionResult> GetMovimientosArticulos()
+        {
+            return Ok(await _service.getMovimientosArticulos());
+        }
+
+
+
         //[HttpGet("ConsultaAllVR")]
         //[Authorize(AuthenticationSchemes = Microsoft.AspNetCore.Authentication.JwtBearer.JwtBearerDefaults.AuthenticationScheme)]
         //public async Task<IActionResult> GetVistasRoles(int idRol)

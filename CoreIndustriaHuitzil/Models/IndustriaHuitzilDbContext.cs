@@ -900,7 +900,11 @@ namespace CoreIndustriaHuitzil.Models
                 entity.Property(e => e.IdCategoria).HasColumnName("id_categoria");
                 entity.Property(e => e.IdTalla).HasColumnName("id_talla");
                 entity.Property(e => e.FechaIngreso).HasColumnName("fecha_ingreso");
-    
+                entity.HasOne(d => d.IdUbicacionNavigation)
+                    .WithMany(p => p.MovimientoArticulos)
+                    .HasForeignKey(d => d.IdUbicacion)
+                    .HasConstraintName("FK_Movimientos_Articulos");
+
             });
 
             OnModelCreatingPartial(modelBuilder);

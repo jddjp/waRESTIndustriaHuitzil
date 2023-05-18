@@ -4026,6 +4026,48 @@ namespace ServiceIndustriaHuitzil.Services
             }
             return response; ;
         }
+        public async Task<ResponseModel> getMovimientosArticulos()
+        {
+            ResponseModel response = new ResponseModel();
+            try
+            {
+                response.exito = false;
+                response.mensaje = "No hay Movimientos  para mostrar";
+                response.respuesta = "[]";
+                List<MovimientoArticulosRequest> movimientosA = new List<MovimientoArticulosRequest>();
+                movimientosA = _ctx.MovimientoArticulos.Include(d => d.IdUbicacionNavigation).ToList()
+                    .ConvertAll(u => new MovimientoArticulosRequest()
+                    {
+                        IdMovimientoArticulos = u.IdMovimientoArticulos,
+                        idMovimiento = u.idMovimiento,
+                        Sku = u.Sku,
+                        IdUbicacion = u.IdUbicacion,
+                        IdCategoria = u.IdCategoria,
+                        IdTalla = u.IdTalla,
+                        Existencia = u.Existencia,
+                        Descripcion = u.Descripcion,
+                        FechaIngreso = u .FechaIngreso,
+                        ubicacion = u.IdUbicacionNavigation.Direccion
+                        //UsuarioRecibe = u.IdUserRecibeNavigation.Nombre
+
+                    })
+                    ;
+                if (movimientosA != null)
+                {
+                    response.exito = true;
+                    response.mensaje = "Se han consultado exitosamente los Movimientos de Inventarios!!";
+                    response.respuesta = movimientosA;
+                }
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e.Message);
+                response.mensaje = e.Message;
+                response.exito = false;
+                response.respuesta = "[]";
+            }
+            return response; ;
+        }
         #endregion
 
     }

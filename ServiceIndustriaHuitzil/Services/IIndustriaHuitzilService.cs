@@ -164,6 +164,7 @@ namespace ServiceIndustriaHuitzil.Services
 
         #region Movimientos
         Task<ResponseModel> getMovimientos();
+        Task<ResponseModel> getMovimientosArticulos();
 
         #endregion
 

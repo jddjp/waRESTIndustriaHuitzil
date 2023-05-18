@@ -1,12 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 
-namespace CoreIndustriaHuitzil.Models
+namespace CoreIndustriaHuitzil.ModelsRequest
 {
-    public partial class MovimientoArticulos
+    public partial class MovimientoArticulosRequest
     {
-       
-
         public int IdMovimientoArticulos { get; set; }
         public int idMovimiento { get; set; }
         public int IdArticulo { get; set; }
@@ -17,6 +18,6 @@ namespace CoreIndustriaHuitzil.Models
         public int? Existencia { get; set; }
         public string? Descripcion { get; set; }
         public string? FechaIngreso { get; set; }
-        public virtual CatUbicacione? IdUbicacionNavigation { get; set; }
+        public string ubicacion { get; set; }
     }
 }

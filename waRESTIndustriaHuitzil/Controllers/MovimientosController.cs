@@ -29,7 +29,12 @@ namespace waRESTIndustriaHuitzil.Controllers
             return Ok(await _service.getMovimientosArticulos());
         }
 
-
+        [HttpPost("Add")]
+        [Authorize(AuthenticationSchemes = Microsoft.AspNetCore.Authentication.JwtBearer.JwtBearerDefaults.AuthenticationScheme)]
+        public async Task<IActionResult> AgregaMovimiento([FromBody] MovimientoInvetarioRequest request)
+        {
+            return Ok(await _service.addMovimientoInventario(request));
+        }
 
         //[HttpGet("ConsultaAllVR")]
         //[Authorize(AuthenticationSchemes = Microsoft.AspNetCore.Authentication.JwtBearer.JwtBearerDefaults.AuthenticationScheme)]

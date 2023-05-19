@@ -166,7 +166,7 @@ namespace ServiceIndustriaHuitzil.Services
         Task<ResponseModel> getMovimientos();
         Task<ResponseModel> getMovimientosArticulos();
 
-       // Task<ResponseModel> addMovimientoInventario();
+        Task<ResponseModel> addMovimientoInventario(MovimientoInvetarioRequest request);
 
         
 

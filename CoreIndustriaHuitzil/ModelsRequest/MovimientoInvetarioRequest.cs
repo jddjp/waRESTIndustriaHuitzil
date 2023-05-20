@@ -18,6 +18,8 @@ namespace CoreIndustriaHuitzil.ModelsRequest
         public string UsuarioRecibe { get; set; }
         public string UsuarioEnvia { get; set; }
 
+        public int? UbicacionDestino { get; set; }
+
         public List<MovimientoArticulosRequest> movimientoArticulos { get; set; } = new List<MovimientoArticulosRequest>();
 
 

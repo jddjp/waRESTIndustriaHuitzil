@@ -168,7 +168,9 @@ namespace ServiceIndustriaHuitzil.Services
 
         Task<ResponseModel> addMovimientoInventario(MovimientoInvetarioRequest request);
 
-        
+        Task<ResponseModel> updateMovimientoInventario(MovimientoInvetarioRequest request);
+
+
 
         #endregion
 

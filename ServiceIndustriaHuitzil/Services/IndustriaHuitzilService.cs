@@ -4090,7 +4090,7 @@ namespace ServiceIndustriaHuitzil.Services
                         newVenta.Usuario = request.Usuario;
                         newVenta.Status = request.Status;
                         newVenta.Receptor = request.Receptor;
-                     
+                        newVenta.UbicacionDestino = request.UbicacionDestino;
 
                         _ctx.Add(newVenta);
                         await _ctx.SaveChangesAsync();
@@ -4181,6 +4181,125 @@ namespace ServiceIndustriaHuitzil.Services
             return response;
         }
 
+
+        public async Task<ResponseModel> updateMovimientoInventario(MovimientoInvetarioRequest request)
+        {
+            ResponseModel response = new ResponseModel();
+            try
+            {
+                response.exito = false;
+                response.mensaje = "No se pudo cerrar el movimiento";
+                response.respuesta = "[]";
+                MovimientosInventario movimientoinventario = new MovimientosInventario();
+
+                using (var dbContextTransaction = _ctx.Database.BeginTransaction())
+                {
+                    try
+                    {
+                        movimientoinventario.Fecha = request.Fecha;
+                        movimientoinventario.Usuario = request.Usuario  ;
+                        movimientoinventario.Status = request.Status;
+                        movimientoinventario.IdMovimiento = request.IdMovimiento;
+                        movimientoinventario.Ubicacion = request.Ubicacion;
+                        movimientoinventario.Receptor = request.Receptor;
+                        movimientoinventario.UbicacionDestino = request.UbicacionDestino;
+
+                         _ctx.Update(movimientoinventario);
+                        await _ctx.SaveChangesAsync();
+                        int idMovimiento = movimientoinventario.IdMovimiento; // recuperar
+
+                        //Actualiza  el stock de los productos del inventario
+                        if (request.movimientoArticulos?.Count() > 0)
+                        {
+                            List<Articulo> listventasArticulos = new List<Articulo>();
+                            List<Articulo> listventasArticulosNuevo = new List<Articulo>();
+
+                            request.movimientoArticulos.ForEach(dataArticulo =>
+                            {
+
+
+
+                                Articulo existeArticulo = _ctx.Articulos.FirstOrDefault(x =>
+                                x.Sku == dataArticulo.Sku & 
+                                x.IdUbicacion == request.UbicacionDestino & 
+                                x.IdCategoria == dataArticulo.IdCategoria &
+                                x.IdTalla == dataArticulo.IdTalla &
+                                x.Descripcion == dataArticulo.Descripcion
+                                );
+
+
+
+                                if (existeArticulo != null)
+                                {
+                                    //Sumar
+                                    int result = Int32.Parse(existeArticulo.Existencia) + Int32.Parse(dataArticulo.Existencia.ToString());
+                                 
+                                  
+                                    existeArticulo.Existencia = result.ToString();
+
+
+                                    listventasArticulos.Add(existeArticulo);
+                                  
+                                  
+
+                                }
+                             else
+                                {
+                                    Articulo newArticulo = new Articulo();
+                                    newArticulo.Status = "UBICACION";
+                                    newArticulo.Descripcion = dataArticulo.Descripcion;
+                                    newArticulo.FechaIngreso = DateTime.Parse(dataArticulo.FechaIngreso); 
+                                    newArticulo.Existencia = dataArticulo.Existencia.ToString();
+                                    newArticulo.IdUbicacion = request.UbicacionDestino;
+                                    newArticulo.IdCategoria = dataArticulo.IdCategoria;
+                                    newArticulo.IdTalla = dataArticulo.IdTalla;
+                                    newArticulo.Precio = 0;
+                                    newArticulo.Sku = dataArticulo.Sku;
+                                    listventasArticulosNuevo.Add(existeArticulo);
+                                   
+
+
+                                }
+
+
+                            });
+
+
+                            if (listventasArticulos.Count() > 0)
+                            {
+                                _ctx.Articulos.AddRange(listventasArticulosNuevo);
+                                _ctx.Articulos.UpdateRange(listventasArticulos);
+                                await _ctx.SaveChangesAsync();
+                            }
+
+                        }
+                        //Hacemos commit de todos los datos
+                        dbContextTransaction.Commit();
+                        response.exito = true;
+                        response.mensaje = "Se ha concluido el movimiento correctamente!";
+                        response.respuesta = "[]";
+
+                    }
+                    catch (Exception ex)
+                    {
+                        Console.WriteLine(ex.InnerException.Message);
+                        response.exito = false;
+                        response.mensaje = ex.InnerException.Message;
+                        response.respuesta = "[]";
+                        dbContextTransaction.Rollback();
+                        return response;
+                    }
+                }
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e.Message);
+                response.mensaje = e.Message;
+                response.exito = false;
+                response.respuesta = "[]";
+            }
+            return response;
+        }
         #endregion
 
     }

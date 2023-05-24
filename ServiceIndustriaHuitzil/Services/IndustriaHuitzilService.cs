@@ -4006,7 +4006,22 @@ namespace ServiceIndustriaHuitzil.Services
                         Receptor = u.Receptor,
                         Direccion = u.IdUbicacionNavigation.Direccion,
                         UsuarioEnvia = u.IdUserEnvioNavigation.Nombre + " "+ u.IdUserEnvioNavigation.ApellidoPaterno,
-                        UsuarioRecibe = u.IdUserRecibeNavigation.Nombre + " " + u.IdUserRecibeNavigation.ApellidoPaterno
+                        UsuarioRecibe = u.IdUserRecibeNavigation.Nombre + " " + u.IdUserRecibeNavigation.ApellidoPaterno,
+                        movimientoArticulos = _ctx.MovimientoArticulos.Where(x => x.idMovimiento == u.IdMovimiento).Include(d => d.IdUbicacionNavigation).ToList()
+                        .ConvertAll(u => new MovimientoArticulosRequest()
+                        {
+                            IdMovimientoArticulos = u.IdMovimientoArticulos,
+                            idMovimiento = u.idMovimiento,
+                            Sku = u.Sku,
+                            IdUbicacion = u.IdUbicacion,
+                            IdCategoria = u.IdCategoria,
+                            IdTalla = u.IdTalla,
+                            Existencia = u.Existencia,
+                            Descripcion = u.Descripcion,
+                            FechaIngreso = u.FechaIngreso,
+                            ubicacion = u.IdUbicacionNavigation.Direccion
+
+                        })
 
                     })
                     ;

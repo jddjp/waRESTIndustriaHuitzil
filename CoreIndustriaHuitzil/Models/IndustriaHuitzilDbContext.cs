@@ -875,14 +875,23 @@ namespace CoreIndustriaHuitzil.Models
             {
                 entity.HasKey(e => e.IdMovimiento);
                 entity.Property(e => e.IdMovimiento).HasColumnName("id_movimiento");
+              
                 entity.HasOne(d => d.IdUbicacionNavigation)
                     .WithMany(p => p.MovimientosInventarios)
                     .HasForeignKey(d => d.Ubicacion)
                     .HasConstraintName("FK_Movimientos_Ubicaciones");
+
+                entity.HasOne(d => d.IdUbicacionDestinoNavigation)
+    .WithMany(p => p.MovimientosInventariosDestino)
+    .HasForeignKey(d => d.UbicacionDestino)
+    .HasConstraintName("FK_Movimientos_Destino");
+
+
                 entity.HasOne(d => d.IdUserEnvioNavigation)
                     .WithMany(p => p.MovimientosInventariosEnvio)
                     .HasForeignKey(d => d.Usuario)
                     .HasConstraintName("FK_Movimientos_Envio");
+
                 entity.HasOne(d => d.IdUserRecibeNavigation)
                     .WithMany(p => p.MovimientosInventariosRecibe)
                     .HasForeignKey(d => d.Receptor)

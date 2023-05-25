@@ -3997,16 +3997,19 @@ namespace ServiceIndustriaHuitzil.Services
                 response.mensaje = "No hay Movimientos  para mostrar";
                 response.respuesta = "[]";
                 List<MovimientoInvetarioRequest> movimientos = new List<MovimientoInvetarioRequest>();
-                movimientos = _ctx.MovimientosInventario.Include(b => b.IdUbicacionNavigation).Include(c=>c.IdUserEnvioNavigation).Include(d => d.IdUserRecibeNavigation).ToList()
+                movimientos = _ctx.MovimientosInventario.Include(b => b.IdUbicacionNavigation).Include(c=>c.IdUserEnvioNavigation).Include(d => d.IdUserRecibeNavigation).Include(c => c.IdUbicacionDestinoNavigation).ToList()
                     .ConvertAll(u => new MovimientoInvetarioRequest(){ 
                         IdMovimiento = u.IdMovimiento,
                         Fecha = u.Fecha,
                         Ubicacion = u.Ubicacion,
                         Status = u.Status,
+                        Usuario = u.Usuario,
                         Receptor = u.Receptor,
                         Direccion = u.IdUbicacionNavigation.Direccion,
                         UsuarioEnvia = u.IdUserEnvioNavigation.Nombre + " "+ u.IdUserEnvioNavigation.ApellidoPaterno,
                         UsuarioRecibe = u.IdUserRecibeNavigation.Nombre + " " + u.IdUserRecibeNavigation.ApellidoPaterno,
+                        UbicacionDestino= u.IdUbicacionDestinoNavigation.IdUbicacion,
+                        UbicacionDestinodesc = u.IdUbicacionDestinoNavigation.Direccion,
                         movimientoArticulos = _ctx.MovimientoArticulos.Where(x => x.idMovimiento == u.IdMovimiento).Include(d => d.IdUbicacionNavigation).ToList()
                         .ConvertAll(u => new MovimientoArticulosRequest()
                         {

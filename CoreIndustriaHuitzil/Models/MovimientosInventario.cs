@@ -15,7 +15,13 @@ namespace CoreIndustriaHuitzil.Models
         public int Receptor { get; set; }
 
         public int? UbicacionDestino { get; set; }
+
+  
         public virtual CatUbicacione? IdUbicacionNavigation { get; set; }
+
+        public virtual CatUbicacione? IdUbicacionDestinoNavigation { get; set; }
+
+
         public virtual User? IdUserEnvioNavigation { get; set; }
         public virtual User? IdUserRecibeNavigation { get; set; }
     }

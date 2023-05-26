@@ -4264,16 +4264,19 @@ namespace ServiceIndustriaHuitzil.Services
                              else
                                 {
                                     Articulo newArticulo = new Articulo();
+                                  //  newArticulo.IdArticulo = 1;
                                     newArticulo.Status = "UBICACION";
+                                    newArticulo.Existencia = dataArticulo.Existencia.ToString();
                                     newArticulo.Descripcion = dataArticulo.Descripcion;
                                     newArticulo.FechaIngreso = DateTime.Parse(dataArticulo.FechaIngreso); 
-                                    newArticulo.Existencia = dataArticulo.Existencia.ToString();
                                     newArticulo.IdUbicacion = request.UbicacionDestino;
                                     newArticulo.IdCategoria = dataArticulo.IdCategoria;
                                     newArticulo.IdTalla = dataArticulo.IdTalla;
-                                    newArticulo.Precio = 0;
+                                    newArticulo.Imagen = "imagen";
                                     newArticulo.Sku = dataArticulo.Sku;
-                                    listventasArticulosNuevo.Add(existeArticulo);
+                                    newArticulo.Precio = 100;
+                                
+                                    listventasArticulosNuevo.Add(newArticulo);
                                    
 
 

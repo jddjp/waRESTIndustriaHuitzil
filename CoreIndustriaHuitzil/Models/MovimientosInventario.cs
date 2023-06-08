@@ -16,7 +16,8 @@ namespace CoreIndustriaHuitzil.Models
 
         public int? UbicacionDestino { get; set; }
 
-  
+        public string? TipoPaquete { get; set; }
+
         public virtual CatUbicacione? IdUbicacionNavigation { get; set; }
 
         public virtual CatUbicacione? IdUbicacionDestinoNavigation { get; set; }

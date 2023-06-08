@@ -4010,6 +4010,7 @@ namespace ServiceIndustriaHuitzil.Services
                         UsuarioRecibe = u.IdUserRecibeNavigation.Nombre + " " + u.IdUserRecibeNavigation.ApellidoPaterno,
                         UbicacionDestino= u.IdUbicacionDestinoNavigation.IdUbicacion,
                         UbicacionDestinodesc = u.IdUbicacionDestinoNavigation.Direccion,
+                        TipoPaquete = u.TipoPaquete,
                         movimientoArticulos = _ctx.MovimientoArticulos.Where(x => x.idMovimiento == u.IdMovimiento).Include(d => d.IdUbicacionNavigation).ToList()
                         .ConvertAll(u => new MovimientoArticulosRequest()
                         {

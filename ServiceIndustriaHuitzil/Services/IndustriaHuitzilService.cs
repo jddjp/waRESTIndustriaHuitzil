@@ -4011,21 +4011,26 @@ namespace ServiceIndustriaHuitzil.Services
                         UbicacionDestino= u.IdUbicacionDestinoNavigation.IdUbicacion,
                         UbicacionDestinodesc = u.IdUbicacionDestinoNavigation.Direccion,
                         TipoPaquete = u.TipoPaquete,
-                        movimientoArticulos = _ctx.MovimientoArticulos.Where(x => x.idMovimiento == u.IdMovimiento).Include(d => d.IdUbicacionNavigation).ToList()
+                        movimientoArticulos = _ctx.MovimientoArticulos.Where(x => x.idMovimiento == u.IdMovimiento).ToList()
                         .ConvertAll(u => new MovimientoArticulosRequest()
                         {
                             IdMovimientoArticulos = u.IdMovimientoArticulos,
                             idMovimiento = u.idMovimiento,
-                            Sku = u.Sku,
-                            IdUbicacion = u.IdUbicacion,
-                            IdCategoria = u.IdCategoria,
-                            IdTalla = u.IdTalla,
+                            IdArticulo = u.IdArticulo,
+                            Status = u.Status,
                             Existencia = u.Existencia,
                             Descripcion = u.Descripcion,
                             FechaIngreso = u.FechaIngreso,
-                            ubicacion = u.IdUbicacionNavigation.Direccion
+                            IdUbicacion = u.IdUbicacion,
+                            IdCategoria = u.IdCategoria,
+                            IdTalla = u.IdTalla,
+                            Imagen = u.Imagen,
+                            Sku = u.Sku,
+                            Precio = u.Precio,
+                            CantMovimiento=u.CantMovimiento,
+   
 
-                        })
+    })
 
                     })
                     ;
@@ -4059,14 +4064,26 @@ namespace ServiceIndustriaHuitzil.Services
                     {
                         IdMovimientoArticulos = u.IdMovimientoArticulos,
                         idMovimiento = u.idMovimiento,
-                        Sku = u.Sku,
+                        IdArticulo = u.IdArticulo,
+                        Status = u.Status,
+                        Existencia = u.Existencia,
+                        Descripcion = u.Descripcion,
+                        FechaIngreso = u.FechaIngreso,
                         IdUbicacion = u.IdUbicacion,
                         IdCategoria = u.IdCategoria,
                         IdTalla = u.IdTalla,
-                        Existencia = u.Existencia,
-                        Descripcion = u.Descripcion,
-                        FechaIngreso = u .FechaIngreso,
-                        ubicacion = u.IdUbicacionNavigation.Direccion
+                        Imagen = u.Imagen,
+                        Sku = u.Sku,
+                        Precio = u.Precio,
+                        //idMovimiento = u.idMovimiento,
+                        //Sku = u.Sku,
+                        //IdUbicacion = u.IdUbicacion,
+                        //IdCategoria = u.IdCategoria,
+                        //IdTalla = u.IdTalla,
+                        //Existencia = u.Existencia,
+                        //Descripcion = u.Descripcion,
+                        //FechaIngreso = u .FechaIngreso,
+                        // ubicacion = u.IdUbicacionNavigation.Direccion
 
                     })
                     ;
@@ -4097,23 +4114,24 @@ namespace ServiceIndustriaHuitzil.Services
                 response.exito = false;
                 response.mensaje = "No se pudo registrar el movimiento";
                 response.respuesta = "[]";
-                MovimientosInventario newVenta = new MovimientosInventario();
+                MovimientosInventario newMovimiento = new MovimientosInventario();
 
                 using (var dbContextTransaction = _ctx.Database.BeginTransaction())
                 {
                     try
                     {
-                     
-                        newVenta.Fecha = request.Fecha;
-                        newVenta.Ubicacion = request.Ubicacion;
-                        newVenta.Usuario = request.Usuario;
-                        newVenta.Status = request.Status;
-                        newVenta.Receptor = request.Receptor;
-                        newVenta.UbicacionDestino = request.UbicacionDestino;
 
-                        _ctx.Add(newVenta);
+                        newMovimiento.Fecha = request.Fecha;
+                        newMovimiento.Ubicacion = request.Ubicacion;
+                        newMovimiento.Usuario = request.Usuario;
+                        newMovimiento.Status = request.Status;
+                        //newMovimiento.Receptor = request.Receptor;
+                        newMovimiento.UbicacionDestino = request.UbicacionDestino;
+                        newMovimiento.TipoPaquete = request.TipoPaquete;
+
+                        _ctx.Add(newMovimiento);
                         await _ctx.SaveChangesAsync();
-                        int idMovimiento = newVenta.IdMovimiento; // recuperar
+                        int idMovimiento = newMovimiento.IdMovimiento; // recuperar
 
                         //Actualiza  el stock de los productos del inventario
                         if (request.movimientoArticulos?.Count() > 0)
@@ -4127,17 +4145,28 @@ namespace ServiceIndustriaHuitzil.Services
                                 listventasArticulos.Add(new MovimientoArticulos()
                                 {
 
-                                    idMovimiento = idMovimiento,
-                                    IdArticulo = dataArticulo.IdArticulo,
-                                    Sku = dataArticulo.Sku,
-                                    IdUbicacion = dataArticulo.IdUbicacion,
-                                    IdCategoria = dataArticulo.IdCategoria,
-                                    IdTalla = dataArticulo.IdTalla,
-                                    Existencia = dataArticulo.Existencia,
-                                    Descripcion = dataArticulo.Descripcion,
-                                    FechaIngreso = dataArticulo.FechaIngreso,
-
-
+                                    //idMovimiento = idMovimiento,
+                                    //IdArticulo = dataArticulo.IdArticulo,
+                                    //Sku = dataArticulo.Sku,
+                                    //IdUbicacion = dataArticulo.IdUbicacion,
+                                    //IdCategoria = dataArticulo.IdCategoria,
+                                    //IdTalla = dataArticulo.IdTalla,
+                                    //Existencia = dataArticulo.Existencia,
+                                    //Descripcion = dataArticulo.Descripcion,
+                                    //FechaIngreso = dataArticulo.FechaIngreso,
+                                idMovimiento = idMovimiento,
+                                IdArticulo = dataArticulo.IdArticulo,
+                                Status = dataArticulo.Status,
+                                Existencia = dataArticulo.Existencia,
+                                Descripcion = dataArticulo.Descripcion,
+                                FechaIngreso = dataArticulo.FechaIngreso,
+                                IdUbicacion = request.UbicacionDestino,
+                                IdCategoria = dataArticulo.IdCategoria,
+                                IdTalla = dataArticulo.IdTalla,
+                                Imagen = dataArticulo.Imagen,
+                                Sku = dataArticulo.Sku,
+                                Precio = dataArticulo.Precio,
+                                  CantMovimiento = dataArticulo.CantMovimiento,
                                 });
 
 
@@ -4145,9 +4174,9 @@ namespace ServiceIndustriaHuitzil.Services
                                 Articulo articuloVenta = _ctx.Articulos.FirstOrDefault(x => x.IdArticulo == dataArticulo.IdArticulo);
 
 
-                                if ((Int32.Parse(articuloVenta.Existencia) - dataArticulo.Existencia) >= 0)
+                                if ((Int32.Parse(articuloVenta.Existencia) - Int32.Parse(dataArticulo.Existencia)) >= 0)
                                 {
-                                    articuloVenta.Existencia = (Int32.Parse(articuloVenta.Existencia) - dataArticulo.Existencia).ToString();
+                                    articuloVenta.Existencia = (Int32.Parse(articuloVenta.Existencia) - Int32.Parse(dataArticulo.Existencia)).ToString();
                                 }
                                 else
                                 {
@@ -4220,7 +4249,7 @@ namespace ServiceIndustriaHuitzil.Services
                         movimientoinventario.Status = request.Status;
                         movimientoinventario.IdMovimiento = request.IdMovimiento;
                         movimientoinventario.Ubicacion = request.Ubicacion;
-                        movimientoinventario.Receptor = request.Receptor;
+                       // movimientoinventario.Receptor = request.Receptor;
                         movimientoinventario.UbicacionDestino = request.UbicacionDestino;
 
                          _ctx.Update(movimientoinventario);
@@ -4265,17 +4294,17 @@ namespace ServiceIndustriaHuitzil.Services
                              else
                                 {
                                     Articulo newArticulo = new Articulo();
-                                  //  newArticulo.IdArticulo = 1;
-                                    newArticulo.Status = "UBICACION";
-                                    newArticulo.Existencia = dataArticulo.Existencia.ToString();
+                                  
+                                    newArticulo.Status = dataArticulo.Status;
+                                    newArticulo.Existencia = dataArticulo.Existencia;
                                     newArticulo.Descripcion = dataArticulo.Descripcion;
-                                    newArticulo.FechaIngreso = DateTime.Parse(dataArticulo.FechaIngreso); 
+                                    newArticulo.FechaIngreso = dataArticulo.FechaIngreso; 
                                     newArticulo.IdUbicacion = request.UbicacionDestino;
                                     newArticulo.IdCategoria = dataArticulo.IdCategoria;
                                     newArticulo.IdTalla = dataArticulo.IdTalla;
-                                    newArticulo.Imagen = "imagen";
+                                    newArticulo.Imagen = dataArticulo.Imagen;
                                     newArticulo.Sku = dataArticulo.Sku;
-                                    newArticulo.Precio = 100;
+                                    newArticulo.Precio = dataArticulo.Precio;
                                 
                                     listventasArticulosNuevo.Add(newArticulo);
                                    

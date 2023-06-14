@@ -903,16 +903,18 @@ namespace CoreIndustriaHuitzil.Models
                 entity.HasKey(e => e.IdMovimientoArticulos);
                 entity.Property(e => e.IdMovimientoArticulos).HasColumnName("id_movimiento_articulos");
 
+                
+                 entity.Property(e => e.CantMovimiento).HasColumnName("cant_movimiento");
                 entity.Property(e => e.idMovimiento).HasColumnName("id_movimiento");
                 entity.Property(e => e.IdArticulo).HasColumnName("id_articulo");
                 entity.Property(e => e.IdUbicacion).HasColumnName("id_ubicacion");
                 entity.Property(e => e.IdCategoria).HasColumnName("id_categoria");
                 entity.Property(e => e.IdTalla).HasColumnName("id_talla");
                 entity.Property(e => e.FechaIngreso).HasColumnName("fecha_ingreso");
-                entity.HasOne(d => d.IdUbicacionNavigation)
-                    .WithMany(p => p.MovimientoArticulos)
-                    .HasForeignKey(d => d.IdUbicacion)
-                    .HasConstraintName("FK_Movimientos_Articulos");
+                //entity.HasOne(d => d.IdUbicacionNavigation)
+                    //.WithMany(p => p.MovimientoArticulos)
+                    //.HasForeignKey(d => d.IdUbicacion)
+                    //.HasConstraintName("FK_Movimientos_Articulos");
 
             });
 

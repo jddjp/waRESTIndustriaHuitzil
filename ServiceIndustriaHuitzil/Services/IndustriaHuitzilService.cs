@@ -4004,7 +4004,7 @@ namespace ServiceIndustriaHuitzil.Services
                         Ubicacion = u.Ubicacion,
                         Status = u.Status,
                         Usuario = u.Usuario,
-                        Receptor = u.Receptor,
+                        //Receptor = u.Receptor,
                         Direccion = u.IdUbicacionNavigation.Direccion,
                         UsuarioEnvia = u.IdUserEnvioNavigation.Nombre + " "+ u.IdUserEnvioNavigation.ApellidoPaterno,
                         UsuarioRecibe = u.IdUserRecibeNavigation.Nombre + " " + u.IdUserRecibeNavigation.ApellidoPaterno,
@@ -4125,7 +4125,7 @@ namespace ServiceIndustriaHuitzil.Services
                         newMovimiento.Ubicacion = request.Ubicacion;
                         newMovimiento.Usuario = request.Usuario;
                         newMovimiento.Status = request.Status;
-                        //newMovimiento.Receptor = request.Receptor;
+                        newMovimiento.Receptor = request.Receptor;
                         newMovimiento.UbicacionDestino = request.UbicacionDestino;
                         newMovimiento.TipoPaquete = request.TipoPaquete;
 

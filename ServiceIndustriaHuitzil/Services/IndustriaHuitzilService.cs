@@ -4030,7 +4030,7 @@ namespace ServiceIndustriaHuitzil.Services
                             CantMovimiento=u.CantMovimiento,
    
 
-    })
+                         })
 
                     })
                     ;
@@ -4059,7 +4059,7 @@ namespace ServiceIndustriaHuitzil.Services
                 response.mensaje = "No hay Movimientos  para mostrar";
                 response.respuesta = "[]";
                 List<MovimientoArticulosRequest> movimientosA = new List<MovimientoArticulosRequest>();
-                movimientosA = _ctx.MovimientoArticulos.Include(d => d.IdUbicacionNavigation).ToList()
+                movimientosA = _ctx.MovimientoArticulos/*.Include(d => d.IdUbicacionNavigation)*/.ToList()
                     .ConvertAll(u => new MovimientoArticulosRequest()
                     {
                         IdMovimientoArticulos = u.IdMovimientoArticulos,

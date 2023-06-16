@@ -13,7 +13,7 @@ namespace CoreIndustriaHuitzil.ModelsRequest
         public int Ubicacion { get; set; }
         public int Usuario { get; set; }
         public string Status { get; set; }
-        public int Receptor { get; set; }
+
         public string Direccion { get; set; }
         public string UsuarioRecibe { get; set; }
         public string UsuarioEnvia { get; set; }

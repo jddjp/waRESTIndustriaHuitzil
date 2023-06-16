@@ -3997,19 +3997,19 @@ namespace ServiceIndustriaHuitzil.Services
                 response.mensaje = "No hay Movimientos  para mostrar";
                 response.respuesta = "[]";
                 List<MovimientoInvetarioRequest> movimientos = new List<MovimientoInvetarioRequest>();
-                movimientos = _ctx.MovimientosInventario.Include(b => b.IdUbicacionNavigation).Include(c=>c.IdUserEnvioNavigation).Include(d => d.IdUserRecibeNavigation).Include(c => c.IdUbicacionDestinoNavigation).ToList()
+                movimientos = _ctx.MovimientosInventario.Include(b => b.IdUbicacionNavigation).Include(c => c.IdUbicacionDestinoNavigation).Include(c => c.IdUserEnvioNavigation).ToList()
                     .ConvertAll(u => new MovimientoInvetarioRequest(){ 
                         IdMovimiento = u.IdMovimiento,
                         Fecha = u.Fecha,
                         Ubicacion = u.Ubicacion,
                         Status = u.Status,
                         Usuario = u.Usuario,
-                        //Receptor = u.Receptor,
+                 
                         Direccion = u.IdUbicacionNavigation.Direccion,
-                        UsuarioEnvia = u.IdUserEnvioNavigation.Nombre + " "+ u.IdUserEnvioNavigation.ApellidoPaterno,
-                        UsuarioRecibe = u.IdUserRecibeNavigation.Nombre + " " + u.IdUserRecibeNavigation.ApellidoPaterno,
-                        UbicacionDestino= u.IdUbicacionDestinoNavigation.IdUbicacion,
+                        UsuarioEnvia = u.IdUserEnvioNavigation.Nombre + " " + u.IdUserEnvioNavigation.ApellidoPaterno,
+                        UbicacionDestino = u.IdUbicacionDestinoNavigation.IdUbicacion,
                         UbicacionDestinodesc = u.IdUbicacionDestinoNavigation.Direccion,
+                        UsuarioRecibe = u.IdUbicacionDestinoNavigation.NombreEncargado,
                         TipoPaquete = u.TipoPaquete,
                         movimientoArticulos = _ctx.MovimientoArticulos.Where(x => x.idMovimiento == u.IdMovimiento).ToList()
                         .ConvertAll(u => new MovimientoArticulosRequest()
@@ -4075,15 +4075,7 @@ namespace ServiceIndustriaHuitzil.Services
                         Imagen = u.Imagen,
                         Sku = u.Sku,
                         Precio = u.Precio,
-                        //idMovimiento = u.idMovimiento,
-                        //Sku = u.Sku,
-                        //IdUbicacion = u.IdUbicacion,
-                        //IdCategoria = u.IdCategoria,
-                        //IdTalla = u.IdTalla,
-                        //Existencia = u.Existencia,
-                        //Descripcion = u.Descripcion,
-                        //FechaIngreso = u .FechaIngreso,
-                        // ubicacion = u.IdUbicacionNavigation.Direccion
+                      
 
                     })
                     ;
@@ -4125,7 +4117,6 @@ namespace ServiceIndustriaHuitzil.Services
                         newMovimiento.Ubicacion = request.Ubicacion;
                         newMovimiento.Usuario = request.Usuario;
                         newMovimiento.Status = request.Status;
-                        newMovimiento.Receptor = request.Receptor;
                         newMovimiento.UbicacionDestino = request.UbicacionDestino;
                         newMovimiento.TipoPaquete = request.TipoPaquete;
 
@@ -4145,15 +4136,7 @@ namespace ServiceIndustriaHuitzil.Services
                                 listventasArticulos.Add(new MovimientoArticulos()
                                 {
 
-                                    //idMovimiento = idMovimiento,
-                                    //IdArticulo = dataArticulo.IdArticulo,
-                                    //Sku = dataArticulo.Sku,
-                                    //IdUbicacion = dataArticulo.IdUbicacion,
-                                    //IdCategoria = dataArticulo.IdCategoria,
-                                    //IdTalla = dataArticulo.IdTalla,
-                                    //Existencia = dataArticulo.Existencia,
-                                    //Descripcion = dataArticulo.Descripcion,
-                                    //FechaIngreso = dataArticulo.FechaIngreso,
+                                
                                 idMovimiento = idMovimiento,
                                 IdArticulo = dataArticulo.IdArticulo,
                                 Status = dataArticulo.Status,
@@ -4249,7 +4232,6 @@ namespace ServiceIndustriaHuitzil.Services
                         movimientoinventario.Status = request.Status;
                         movimientoinventario.IdMovimiento = request.IdMovimiento;
                         movimientoinventario.Ubicacion = request.Ubicacion;
-                       // movimientoinventario.Receptor = request.Receptor;
                         movimientoinventario.UbicacionDestino = request.UbicacionDestino;
 
                          _ctx.Update(movimientoinventario);

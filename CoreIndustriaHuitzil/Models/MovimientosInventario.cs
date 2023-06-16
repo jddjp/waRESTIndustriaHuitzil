@@ -12,7 +12,6 @@ namespace CoreIndustriaHuitzil.Models
         public int Ubicacion { get; set; }
         public int Usuario { get; set; }
         public string Status { get; set; }
-        public int Receptor { get; set; }
 
         public int? UbicacionDestino { get; set; }
 
@@ -24,6 +23,5 @@ namespace CoreIndustriaHuitzil.Models
 
 
         public virtual User? IdUserEnvioNavigation { get; set; }
-        public virtual User? IdUserRecibeNavigation { get; set; }
     }
 }

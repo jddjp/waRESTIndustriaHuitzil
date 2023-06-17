@@ -8,6 +8,7 @@ namespace CoreIndustriaHuitzil.Models
         public CatCategoria()
         {
             Articulos = new HashSet<Articulo>();
+            MovimientosArticulos = new HashSet<MovimientoArticulos>();
         }
 
         public int IdCategoria { get; set; }
@@ -15,5 +16,9 @@ namespace CoreIndustriaHuitzil.Models
         public string? Descripcion { get; set; }
 
         public virtual ICollection<Articulo> Articulos { get; set; }
+
+        public virtual ICollection<MovimientoArticulos> MovimientosArticulos { get; set; }
+
+
     }
 }

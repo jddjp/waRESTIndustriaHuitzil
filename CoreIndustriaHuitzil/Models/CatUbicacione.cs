@@ -11,6 +11,7 @@ namespace CoreIndustriaHuitzil.Models
             MaterialesUbicaciones = new HashSet<MaterialesUbicacione>();
             MovimientosInventarios = new HashSet<MovimientosInventario>();
             MovimientosInventariosDestino = new HashSet<MovimientosInventario>();
+            MovimientosArticulos = new HashSet<MovimientoArticulos>();
           
         }
 
@@ -20,9 +21,10 @@ namespace CoreIndustriaHuitzil.Models
         public string? ApellidoPEncargado { get; set; }
         public string? ApellidoMEncargado { get; set; }
         public string? Telefono1 { get; set; }
+
         public string? Telefono2 { get; set; }
         public string? Correo { get; set; }
-
+       public virtual ICollection<MovimientoArticulos> MovimientosArticulos { get; set; }
         public virtual ICollection<Articulo> Articulos { get; set; }
         public virtual ICollection<MaterialesUbicacione> MaterialesUbicaciones { get; set; }
         public virtual ICollection<MovimientosInventario> MovimientosInventarios { get; set; }

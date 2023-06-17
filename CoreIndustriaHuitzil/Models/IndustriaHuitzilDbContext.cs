@@ -881,6 +881,9 @@ namespace CoreIndustriaHuitzil.Models
                     .HasForeignKey(d => d.Ubicacion)
                     .HasConstraintName("FK_Movimientos_Ubicaciones");
 
+     
+
+
                 entity.HasOne(d => d.IdUbicacionDestinoNavigation)
     .WithMany(p => p.MovimientosInventariosDestino)
     .HasForeignKey(d => d.UbicacionDestino)
@@ -899,8 +902,23 @@ namespace CoreIndustriaHuitzil.Models
                 entity.HasKey(e => e.IdMovimientoArticulos);
                 entity.Property(e => e.IdMovimientoArticulos).HasColumnName("id_movimiento_articulos");
 
-                
-                 entity.Property(e => e.CantMovimiento).HasColumnName("cant_movimiento");
+                entity.HasOne(d => d.IdCategoriaNavigation)
+                   .WithMany(p => p.MovimientosArticulos)
+                   .HasForeignKey(d => d.IdCategoria)
+                   .HasConstraintName("FK_Articulos_Categorias");
+
+                entity.HasOne(d => d.IdTallaNavigation)
+                    .WithMany(p => p.MovimientosArticulos)
+                    .HasForeignKey(d => d.IdTalla)
+                    .HasConstraintName("FK_Articulos_Tallas");
+
+                entity.HasOne(d => d.IdUbicacionNavigation)
+                    .WithMany(p => p.MovimientosArticulos)
+                    .HasForeignKey(d => d.IdUbicacion)
+                    .HasConstraintName("FK_Articulos_Ubicaciones");
+
+            
+            entity.Property(e => e.CantMovimiento).HasColumnName("cant_movimiento");
                 entity.Property(e => e.idMovimiento).HasColumnName("id_movimiento");
                 entity.Property(e => e.IdArticulo).HasColumnName("id_articulo");
                 entity.Property(e => e.IdUbicacion).HasColumnName("id_ubicacion");

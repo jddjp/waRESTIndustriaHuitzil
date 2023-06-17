@@ -3997,6 +3997,8 @@ namespace ServiceIndustriaHuitzil.Services
                 response.mensaje = "No hay Movimientos  para mostrar";
                 response.respuesta = "[]";
                 List<MovimientoInvetarioRequest> movimientos = new List<MovimientoInvetarioRequest>();
+             
+
                 movimientos = _ctx.MovimientosInventario.Include(b => b.IdUbicacionNavigation).Include(c => c.IdUbicacionDestinoNavigation).Include(c => c.IdUserEnvioNavigation).ToList()
                     .ConvertAll(u => new MovimientoInvetarioRequest(){ 
                         IdMovimiento = u.IdMovimiento,
@@ -4004,14 +4006,13 @@ namespace ServiceIndustriaHuitzil.Services
                         Ubicacion = u.Ubicacion,
                         Status = u.Status,
                         Usuario = u.Usuario,
-                 
                         Direccion = u.IdUbicacionNavigation.Direccion,
                         UsuarioEnvia = u.IdUserEnvioNavigation.Nombre + " " + u.IdUserEnvioNavigation.ApellidoPaterno,
                         UbicacionDestino = u.IdUbicacionDestinoNavigation.IdUbicacion,
                         UbicacionDestinodesc = u.IdUbicacionDestinoNavigation.Direccion,
                         UsuarioRecibe = u.IdUbicacionDestinoNavigation.NombreEncargado,
                         TipoPaquete = u.TipoPaquete,
-                        movimientoArticulos = _ctx.MovimientoArticulos.Where(x => x.idMovimiento == u.IdMovimiento).ToList()
+                        movimientoArticulos = _ctx.MovimientoArticulos.Where(x => x.idMovimiento == u.IdMovimiento).Include(a => a.IdTallaNavigation).Include(b => b.IdCategoriaNavigation).Include(c => c.IdUbicacionNavigation).ToList()
                         .ConvertAll(u => new MovimientoArticulosRequest()
                         {
                             IdMovimientoArticulos = u.IdMovimientoArticulos,
@@ -4025,12 +4026,15 @@ namespace ServiceIndustriaHuitzil.Services
                             IdCategoria = u.IdCategoria,
                             IdTalla = u.IdTalla,
                             Imagen = u.Imagen,
+                            talla = u.IdTallaNavigation.Nombre,
+                            ubicacion = u.IdUbicacionNavigation.Direccion,
+                            categoria = u.IdCategoriaNavigation.Descripcion,
                             Sku = u.Sku,
                             Precio = u.Precio,
                             CantMovimiento=u.CantMovimiento,
-   
 
-                         })
+                            
+                        })
 
                     })
                     ;
@@ -4264,13 +4268,9 @@ namespace ServiceIndustriaHuitzil.Services
                                     //Sumar
                                     int result = Int32.Parse(existeArticulo.Existencia) + Int32.Parse(dataArticulo.Existencia.ToString());
                                  
-                                  
                                     existeArticulo.Existencia = result.ToString();
 
-
                                     listventasArticulos.Add(existeArticulo);
-                                  
-                                  
 
                                 }
                              else

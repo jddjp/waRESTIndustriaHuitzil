@@ -9,6 +9,7 @@ namespace CoreIndustriaHuitzil.Models
         {
             Articulos = new HashSet<Articulo>();
             Apartados = new HashSet<Apartados>();
+            MovimientosArticulos = new HashSet<MovimientoArticulos>();
         }
       
         public int IdTalla { get; set; }
@@ -18,5 +19,7 @@ namespace CoreIndustriaHuitzil.Models
 
         public virtual ICollection<Articulo> Articulos { get; set; }
         public virtual ICollection<Apartados> Apartados { get; set; }
+
+          public virtual ICollection<MovimientoArticulos> MovimientosArticulos { get; set; }
     }
 }

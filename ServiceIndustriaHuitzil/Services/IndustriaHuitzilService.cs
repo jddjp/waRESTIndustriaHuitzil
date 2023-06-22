@@ -4266,7 +4266,7 @@ namespace ServiceIndustriaHuitzil.Services
                                 if (existeArticulo != null)
                                 {
                                     //Sumar
-                                    int result = Int32.Parse(existeArticulo.Existencia) + Int32.Parse(dataArticulo.Existencia.ToString());
+                                    int result = Int32.Parse(existeArticulo.Existencia) + Int32.Parse(dataArticulo.CantMovimiento.ToString());
                                  
                                     existeArticulo.Existencia = result.ToString();
 

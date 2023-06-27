@@ -4163,7 +4163,7 @@ namespace ServiceIndustriaHuitzil.Services
 
                                 if ((Int32.Parse(articuloVenta.Existencia) - Int32.Parse(dataArticulo.Existencia)) >= 0)
                                 {
-                                    articuloVenta.Existencia = (Int32.Parse(articuloVenta.Existencia) - Int32.Parse(dataArticulo.Existencia)).ToString();
+                                    articuloVenta.Existencia = (Int32.Parse(articuloVenta.Existencia) - dataArticulo.CantMovimiento).ToString();
                                 }
                                 else
                                 {
@@ -4237,8 +4237,10 @@ namespace ServiceIndustriaHuitzil.Services
                         movimientoinventario.IdMovimiento = request.IdMovimiento;
                         movimientoinventario.Ubicacion = request.Ubicacion;
                         movimientoinventario.UbicacionDestino = request.UbicacionDestino;
+                        movimientoinventario.TipoPaquete = request.TipoPaquete;
 
-                         _ctx.Update(movimientoinventario);
+
+                        _ctx.Update(movimientoinventario);
                         await _ctx.SaveChangesAsync();
                         int idMovimiento = movimientoinventario.IdMovimiento; // recuperar
 
@@ -4278,7 +4280,7 @@ namespace ServiceIndustriaHuitzil.Services
                                     Articulo newArticulo = new Articulo();
                                   
                                     newArticulo.Status = dataArticulo.Status;
-                                    newArticulo.Existencia = dataArticulo.Existencia;
+                                    newArticulo.Existencia = dataArticulo.CantMovimiento.ToString();
                                     newArticulo.Descripcion = dataArticulo.Descripcion;
                                     newArticulo.FechaIngreso = dataArticulo.FechaIngreso; 
                                     newArticulo.IdUbicacion = request.UbicacionDestino;
@@ -4300,8 +4302,16 @@ namespace ServiceIndustriaHuitzil.Services
 
                             if (listventasArticulos.Count() > 0)
                             {
-                                _ctx.Articulos.AddRange(listventasArticulosNuevo);
+                             
                                 _ctx.Articulos.UpdateRange(listventasArticulos);
+                                await _ctx.SaveChangesAsync();
+                            }
+
+
+                            if (listventasArticulosNuevo.Count() > 0)
+                            {
+                                _ctx.Articulos.AddRange(listventasArticulosNuevo);
+                               
                                 await _ctx.SaveChangesAsync();
                             }
 

@@ -4012,6 +4012,7 @@ namespace ServiceIndustriaHuitzil.Services
                         UbicacionDestinodesc = u.IdUbicacionDestinoNavigation.Direccion,
                         UsuarioRecibe = u.IdUbicacionDestinoNavigation.NombreEncargado,
                         TipoPaquete = u.TipoPaquete,
+                        TotalPiezas = u.TotalPiezas,
                         movimientoArticulos = _ctx.MovimientoArticulos.Where(x => x.idMovimiento == u.IdMovimiento).Include(a => a.IdTallaNavigation).Include(b => b.IdCategoriaNavigation).Include(c => c.IdUbicacionNavigation).ToList()
                         .ConvertAll(u => new MovimientoArticulosRequest()
                         {
@@ -4123,6 +4124,7 @@ namespace ServiceIndustriaHuitzil.Services
                         newMovimiento.Status = request.Status;
                         newMovimiento.UbicacionDestino = request.UbicacionDestino;
                         newMovimiento.TipoPaquete = request.TipoPaquete;
+                        newMovimiento.TotalPiezas = request.TotalPiezas;
 
                         _ctx.Add(newMovimiento);
                         await _ctx.SaveChangesAsync();
@@ -4216,6 +4218,59 @@ namespace ServiceIndustriaHuitzil.Services
             return response;
         }
 
+        public async Task<ResponseModel> updateConteo(MovimientoInvetarioRequest request)
+        {
+            ResponseModel response = new ResponseModel();
+            try
+            {
+                response.exito = false;
+                response.mensaje = "No se pudo cerrar el movimiento";
+                response.respuesta = "[]";
+                MovimientosInventario movimientoinventario = new MovimientosInventario();
+
+                using (var dbContextTransaction = _ctx.Database.BeginTransaction())
+                {
+                    try
+                    {
+                        movimientoinventario.Fecha = request.Fecha;
+                        movimientoinventario.Usuario = request.Usuario;
+                        movimientoinventario.Status = request.Status;
+                        movimientoinventario.IdMovimiento = request.IdMovimiento;
+                        movimientoinventario.Ubicacion = request.Ubicacion;
+                        movimientoinventario.UbicacionDestino = request.UbicacionDestino;
+                        movimientoinventario.TipoPaquete = request.TipoPaquete;
+                        movimientoinventario.TotalPiezas = request.TotalPiezas;
+
+                        _ctx.Update(movimientoinventario);
+                        await _ctx.SaveChangesAsync();
+                       
+                        //Hacemos commit de todos los datos
+                        dbContextTransaction.Commit();
+                        response.exito = true;
+                        response.mensaje = "Se Valido el conteo del Movimiento!";
+                        response.respuesta = "[]";
+
+                    }
+                    catch (Exception ex)
+                    {
+                        Console.WriteLine(ex.InnerException.Message);
+                        response.exito = false;
+                        response.mensaje = ex.InnerException.Message;
+                        response.respuesta = "[]";
+                        dbContextTransaction.Rollback();
+                        return response;
+                    }
+                }
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e.Message);
+                response.mensaje = e.Message;
+                response.exito = false;
+                response.respuesta = "[]";
+            }
+            return response;
+        }
 
         public async Task<ResponseModel> updateMovimientoInventario(MovimientoInvetarioRequest request)
         {
@@ -4238,6 +4293,8 @@ namespace ServiceIndustriaHuitzil.Services
                         movimientoinventario.Ubicacion = request.Ubicacion;
                         movimientoinventario.UbicacionDestino = request.UbicacionDestino;
                         movimientoinventario.TipoPaquete = request.TipoPaquete;
+                        movimientoinventario.TotalPiezas = request.TotalPiezas;
+
 
 
                         _ctx.Update(movimientoinventario);

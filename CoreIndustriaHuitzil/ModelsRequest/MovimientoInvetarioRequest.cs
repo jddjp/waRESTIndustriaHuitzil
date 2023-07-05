@@ -21,7 +21,9 @@ namespace CoreIndustriaHuitzil.ModelsRequest
         public int? UbicacionDestino { get; set; }
 
         public string? TipoPaquete { get; set; }
-        
+
+        public int? TotalPiezas { get; set; }
+
         public string? UbicacionDestinodesc { get; set; }
 
         public List<MovimientoArticulosRequest> movimientoArticulos { get; set; } = new List<MovimientoArticulosRequest>();

@@ -65,7 +65,7 @@ namespace waRESTIndustriaHuitzil
             app.UseCors("AllowWebApp");
 
             // app.UseHttpsRedirection();
-            app.UseForwardedHeaders()
+            app.UseForwardedHeaders();
 
             app.UseRouting();
 

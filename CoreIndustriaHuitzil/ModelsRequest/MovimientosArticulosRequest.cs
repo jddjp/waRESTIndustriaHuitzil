@@ -23,7 +23,7 @@ namespace CoreIndustriaHuitzil.ModelsRequest
         public string ubicacion { get; set; }
         public string? Imagen { get; set; }
         public string? Sku { get; set; }
-        public int? Precio { get; set; }
+        public decimal? Precio { get; set; }
         public int? CantMovimiento { get; set; }
     }
 }

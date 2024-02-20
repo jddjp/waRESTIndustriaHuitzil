@@ -22,7 +22,7 @@ namespace CoreIndustriaHuitzil.Models
         public int? IdTalla { get; set; }
         public string? Imagen { get; set; }
         public string? Sku { get; set; }
-        public int? Precio { get; set; }
+        public decimal? Precio { get; set; }
 
         public virtual CatCategoria? IdCategoriaNavigation { get; set; }
         public virtual CatTalla? IdTallaNavigation { get; set; }

@@ -566,7 +566,7 @@ namespace ServiceIndustriaHuitzil.Services
                             categoria = x.IdArticuloNavigation.IdCategoriaNavigation.Descripcion,
                             ubicacion = x.IdArticuloNavigation.IdUbicacionNavigation.Direccion,
                             sku = x.IdArticuloNavigation.Sku,
-                            precio = (int)x.IdArticuloNavigation.Precio,
+                            precio = (decimal)x.IdArticuloNavigation.Precio,
                             imagen = x.IdArticuloNavigation.Imagen
                         }
                     });
@@ -653,7 +653,7 @@ namespace ServiceIndustriaHuitzil.Services
                                 categoria = null,
                                 ubicacion = null,
                                 sku = x.IdArticuloNavigation.Sku,
-                                precio = (int)x.IdArticuloNavigation.Precio,
+                                precio = (decimal)x.IdArticuloNavigation.Precio,
                                 imagen = x.IdArticuloNavigation.Imagen
                             },
                             VentaArticulo = new VentaArticuloRequest()
@@ -662,7 +662,7 @@ namespace ServiceIndustriaHuitzil.Services
                                 IdVenta = x.IdVentaArticuloNavigation.IdVenta,
                                 IdArticulo = x.IdVentaArticuloNavigation.IdArticulo,
                                 Cantidad = x.IdVentaArticuloNavigation.Cantidad,
-                                PrecioUnitario = x.IdVentaArticuloNavigation.PrecioUnitario,
+                                PrecioUnitario = (decimal)x.IdVentaArticuloNavigation.PrecioUnitario,
                                 Subtotal = x.IdVentaArticuloNavigation.Subtotal,
                                 Articulo = new ProductoRequest()
                                 {
@@ -678,7 +678,7 @@ namespace ServiceIndustriaHuitzil.Services
                                     categoria = null,
                                     ubicacion = null,
                                     sku = x.IdVentaArticuloNavigation.IdArticuloNavigation.Sku,
-                                    precio = (int)x.IdVentaArticuloNavigation.IdArticuloNavigation.Precio,
+                                    precio = (decimal)x.IdVentaArticuloNavigation.IdArticuloNavigation.Precio,
                                     imagen = x.IdVentaArticuloNavigation.IdArticuloNavigation.Imagen
                                 }
                             }
@@ -1285,7 +1285,7 @@ namespace ServiceIndustriaHuitzil.Services
                         IdMaterial = x.IdMaterial,
                         Nombre = x.Nombre,
                         Descripcion = x.Descripcion,
-                        Precio = (int)x.Precio,
+                        Precio = (double)x.Precio,
                         TipoMedicion = x.TipoMedicion,
                         Status = x.Status,
                         Stock = (double)x.Stock,
@@ -1940,7 +1940,7 @@ namespace ServiceIndustriaHuitzil.Services
                                                        talla = u.IdTallaNavigation.Nombre,
                                                        ubicacion= u.IdUbicacionNavigation.Direccion,
                                                        categoria = u.IdCategoriaNavigation.Descripcion,
-                                                       precio = (int)u.Precio,
+                                                       precio = (decimal)u.Precio,
                                                        sku = u.Sku
                                                    });
                 }
@@ -1962,7 +1962,7 @@ namespace ServiceIndustriaHuitzil.Services
                                                        talla = u.IdTallaNavigation.Nombre,
                                                        ubicacion = u.IdUbicacionNavigation.Direccion,
                                                        categoria = u.IdCategoriaNavigation.Descripcion,
-                                                       precio = (int)u.Precio,
+                                                       precio = (decimal)u.Precio,
                                                        sku = u.Sku
                                                    });
                 }
@@ -2011,7 +2011,7 @@ namespace ServiceIndustriaHuitzil.Services
                                                        talla = u.IdTallaNavigation.Nombre,
                                                        ubicacion = u.IdUbicacionNavigation.Direccion,
                                                        categoria = u.IdCategoriaNavigation.Descripcion,
-                                                       precio = (int)u.Precio,
+                                                       precio = (decimal)u.Precio,
                                                        sku = u.Sku
                                                    });
                 }
@@ -2033,7 +2033,7 @@ namespace ServiceIndustriaHuitzil.Services
                                                        talla = u.IdTallaNavigation.Nombre,
                                                        ubicacion = u.IdUbicacionNavigation.Direccion,
                                                        categoria = u.IdCategoriaNavigation.Descripcion,
-                                                       precio = (int)u.Precio,
+                                                       precio = (decimal)u.Precio,
                                                        sku = u.Sku
                                                    });
                 }
@@ -2248,7 +2248,7 @@ namespace ServiceIndustriaHuitzil.Services
                             talla = product.IdTallaNavigation.Nombre,
                             ubicacion = product.IdUbicacionNavigation.Direccion,
                             categoria = product.IdCategoriaNavigation.Descripcion,
-                            precio = (int)product.Precio,
+                            precio = (decimal)product.Precio,
                             sku = product.Sku
                         });
                     });
@@ -2270,7 +2270,7 @@ namespace ServiceIndustriaHuitzil.Services
                                 talla = product.IdTallaNavigation.Nombre,
                                 ubicacion = product.IdUbicacionNavigation.Direccion,
                                 categoria = product.IdCategoriaNavigation.Descripcion,
-                                precio = (int)product.Precio,
+                                precio = (decimal)product.Precio,
                                 sku = product.Sku
                             });
                         }
@@ -2335,7 +2335,7 @@ namespace ServiceIndustriaHuitzil.Services
                             talla = product.IdTallaNavigation.Nombre,
                             ubicacion = product.IdUbicacionNavigation.Direccion,
                             categoria = product.IdCategoriaNavigation.Descripcion,
-                            precio = (int)product.Precio,
+                            precio = (decimal)product.Precio,
                             sku = product.Sku
                         });
                     });
@@ -2357,7 +2357,7 @@ namespace ServiceIndustriaHuitzil.Services
                                 talla = product.IdTallaNavigation.Nombre,
                                 ubicacion = product.IdUbicacionNavigation.Direccion,
                                 categoria = product.IdCategoriaNavigation.Descripcion,
-                                precio = (int)product.Precio,
+                                precio = (decimal)product.Precio,
                                 sku = product.Sku
                             });
                         }
@@ -3297,7 +3297,9 @@ namespace ServiceIndustriaHuitzil.Services
                                                      ApellidoMaterno = u.ApellidoMaterno,
                                                      Telefono = u.Telefono,
                                                      Correo = u.Correo,
-                                                     direccion = u.ubicacion
+                                                     direccion = u.ubicacion,
+                                                     pc = u.pc,
+                                                     impresora = u.impresora
 
                                                  });
 
@@ -3950,7 +3952,7 @@ namespace ServiceIndustriaHuitzil.Services
                             IdVenta = x.IdVenta,
                             IdArticulo = x.IdArticulo,
                             Cantidad = x.Cantidad,
-                            PrecioUnitario = x.PrecioUnitario,
+                            PrecioUnitario = (decimal)x.PrecioUnitario,
                             Subtotal = x.Subtotal,
                             Articulo = new ProductoRequest()
                             {
@@ -3966,7 +3968,7 @@ namespace ServiceIndustriaHuitzil.Services
                                 categoria = x.IdArticuloNavigation.IdCategoriaNavigation.Descripcion,
                                 ubicacion = x.IdArticuloNavigation.IdUbicacionNavigation.Direccion,
                                 sku = x.IdArticuloNavigation.Sku,
-                                precio = (int)x.IdArticuloNavigation.Precio,
+                                precio = (decimal)x.IdArticuloNavigation.Precio,
                                 imagen = x.IdArticuloNavigation.Imagen
                             }
                         });
@@ -4031,7 +4033,7 @@ namespace ServiceIndustriaHuitzil.Services
                             ubicacion = u.IdUbicacionNavigation.Direccion,
                             categoria = u.IdCategoriaNavigation.Descripcion,
                             Sku = u.Sku,
-                            Precio = u.Precio,
+                            Precio = (decimal)u.Precio,
                             CantMovimiento=u.CantMovimiento,
 
                             
@@ -4154,7 +4156,7 @@ namespace ServiceIndustriaHuitzil.Services
                                 IdTalla = dataArticulo.IdTalla,
                                 Imagen = dataArticulo.Imagen,
                                 Sku = dataArticulo.Sku,
-                                Precio = dataArticulo.Precio,
+                                Precio = (decimal)dataArticulo.Precio,
                                   CantMovimiento = dataArticulo.CantMovimiento,
                                 });
 

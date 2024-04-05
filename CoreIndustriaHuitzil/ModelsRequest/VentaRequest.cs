@@ -21,6 +21,8 @@ namespace CoreIndustriaHuitzil.ModelsRequest
         public decimal? Tarjeta { get; set; }
         public decimal? Efectivo { get; set; }
 
+        public int? Descuento { get; set; }
+
         public virtual CajaRequest? Caja { get; set; } = null!;
 
         public List<VentaArticuloRequest> ventaArticulo { get; set; } = new List<VentaArticuloRequest>();

@@ -3731,6 +3731,7 @@ namespace ServiceIndustriaHuitzil.Services
                             newVenta.Total = request.Total;
                             newVenta.Tarjeta = request.Tarjeta;
                             newVenta.Efectivo = request.Efectivo;
+                            newVenta.Descuento = request.Descuento;
 
                         _ctx.Add(newVenta);
                          await _ctx.SaveChangesAsync();

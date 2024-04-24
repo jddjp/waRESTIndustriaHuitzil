@@ -17,6 +17,7 @@ namespace ServiceIndustriaHuitzil.Services
 
         #region Apartados
         Task<ResponseModel> getApartados();
+        Task<ResponseModel> getArticulosApartado(int idApartado);
         Task<ResponseModel> getApartadosByUser(int IdUsuario, string type, int IdApartado);
         Task<ResponseModel> postApartados(ApartadosRequest apartadosRequest);
         Task<ResponseModel> putApartados(ApartadosRequest apartadosRequest);
@@ -66,6 +67,7 @@ namespace ServiceIndustriaHuitzil.Services
         #region PagoApartados
         Task<ResponseModel> getPagos();
         Task<ResponseModel> getPagosByApartado(int IdApartado);
+        Task<ResponseModel> getPagosByCaja(int IdCaja);
         Task<ResponseModel> postPagoApartado(PagoApartadoRequest pagoApartadoRequest);
         /*Task<ResponseModel> putApartados(ApartadosRequest apartadosRequest);
         Task<ResponseModel> deleteApartados(ApartadosRequest apartadosRequest);*/

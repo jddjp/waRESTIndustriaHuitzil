@@ -8,6 +8,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using System.Data;
 using System.Data.Common;
+//using System.Data.Entity;
 using System.Runtime.CompilerServices;
 using System.Security.Cryptography;
 using System.Text;
@@ -111,26 +112,21 @@ namespace ServiceIndustriaHuitzil.Services
                 response.mensaje = "No hay clientes para mostrar";
                 response.respuesta = "[]";
                 List<ApartadosRequest> apartados = new List<ApartadosRequest>();
-                apartados = _ctx.Apartados.Where(x => x.Type.Equals("A") || x.Type.Equals("E")).Include(a => a.IdTallaNavigation).Include(b => b.IdArticuloNavigation).Include(c=>c.IdClienteNavigation).OrderByDescending(apartado => apartado.Status).ToList()
+                apartados = _ctx.Apartados.Where(x => x.Type.Equals("A") || x.Type.Equals("E"))
+                
+                    .Include(c=>c.IdClienteNavigation).OrderByDescending(apartado => apartado.Status).ToList()
                      .ConvertAll(u => new ApartadosRequest()
                      {
                          IdApartado = u.IdApartado,
-                         IdEmpleado = u.IdEmpleado,
-                         idArticulo = u.idArticulo,
-                         IdTalla = u.IdTalla,
-                         Telefono = u.Telefono,
-                         Direccion = u.Direccion,
+                         IdCliente = u.IdCliente,
+                         total = u.total,
+                         resto = u.resto,
                          Fecha = (DateTime)u.Fecha,
                          FechaEntrega = (DateTime?)u.FechaEntrega,
                          Status = u.Status,
-                         talla = u.IdTallaNavigation.Descripcion,
-                         articulo = u.IdArticuloNavigation.Descripcion,
-                         precio = u.IdArticuloNavigation.Precio,
                          type = u.Type,
-                         cliente = u.IdClienteNavigation.Nombre + " "+ u.IdClienteNavigation.ApellidoPaterno
-                         //cliente = u.
-
-
+                         cliente = u.IdClienteNavigation.Nombre + " "+ u.IdClienteNavigation.ApellidoPaterno + " " + u.IdClienteNavigation.ApellidoMaterno
+                       
                      });
                 if (apartados != null)
                 {
@@ -149,6 +145,52 @@ namespace ServiceIndustriaHuitzil.Services
             return response;
         }
 
+        public async Task<ResponseModel> getArticulosApartado(int IdApartado)
+        {
+            ResponseModel response = new ResponseModel();
+            try
+            {
+                response.exito = false;
+                response.mensaje = "No hay Apartados para mostrar";
+                response.respuesta = null;
+                List<ApartadoArticuloRequest> articulos = new List<ApartadoArticuloRequest>();
+               
+                articulos = _ctx.ApartadoArticulos.Where(x => x.IdApartado == IdApartado)
+                        .Include(a => a.IdArticuloNavigation)
+                        .ToList()
+                        .ConvertAll(u => new ApartadoArticuloRequest()
+                        {
+                            IdArticulo = u.IdArticuloNavigation.IdArticulo,
+                            Descripcion = u.IdArticuloNavigation.Descripcion,
+                            Precio = u.IdArticuloNavigation.Precio,
+                            Sku = u.IdArticuloNavigation.Sku,
+                            Cantidad = u.Cantidad
+                            
+                            
+                            //IdApartadoArticulo = u.IdApartadoArticulo,
+                            
+
+
+                        });
+              
+               
+                if (articulos != null)
+                {
+                    response.exito = true;
+                    response.mensaje = "Se han consultado exitosamente los apartados!!";
+                    response.respuesta = articulos;
+                }
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e.Message);
+                response.mensaje = e.Message;
+                response.exito = false;
+                response.respuesta = null;
+            }
+            return response;
+        }
+
         public async Task<ResponseModel> getApartadosByUser(int IdUsuario,string type,int IdApartado)
         {
             ResponseModel response = new ResponseModel();
@@ -160,42 +202,41 @@ namespace ServiceIndustriaHuitzil.Services
                 List<ApartadosRequest> apartados = new List<ApartadosRequest>();
                 if (type.Equals("I"))
                 {
-                    apartados = _ctx.Apartados.Where(x => x.idParent == IdApartado).Include(a => a.IdTallaNavigation).Include(b => b.IdArticuloNavigation).OrderByDescending(apartado => apartado.Status).ToList()
+                    apartados = _ctx.Apartados.Where(x => x.idParent == IdApartado)
+                        .OrderByDescending(apartado => apartado.Status).ToList()
                         .ConvertAll(u => new ApartadosRequest()
                         {
                             IdApartado = u.IdApartado,
-                            IdEmpleado = u.IdEmpleado,
-                            idArticulo = u.idArticulo,
+                            //IdEmpleado = u.IdEmpleado,
+                            //idArticulo = u.idArticulo,
                             idParent = IdApartado,
-                            IdTalla = u.IdTalla,
-                            Telefono = u.Telefono,
-                            Direccion = u.Direccion,
+                            //IdTalla = u.IdTalla,
                             Fecha = (DateTime)u.Fecha,
                             FechaEntrega = (DateTime?)u.FechaEntrega,
                             Status = u.Status,
-                            talla = u.IdTallaNavigation.Descripcion,
-                            articulo = u.IdArticuloNavigation.Descripcion,
-                            precio = u.IdArticuloNavigation.Precio
+                            //talla = u.IdTallaNavigation.Descripcion,
+                            //articulo = u.IdArticuloNavigation.Descripcion,
+                            //precio = u.IdArticuloNavigation.Precio
 
 
                         });
                 }
                 else {
-                    apartados = _ctx.Apartados.Include(a => a.IdTallaNavigation).Include(b => b.IdArticuloNavigation).Where(x => x.IdEmpleado == IdUsuario && x.Type == type).OrderByDescending(apartado => apartado.Status).ToList()
+                    apartados = _ctx.Apartados
+                        .Where(x => x.IdCliente == IdUsuario && x.Type == type)
+                        .OrderByDescending(apartado => apartado.Status).ToList()
                    .ConvertAll(u => new ApartadosRequest()
                    {
                        IdApartado = u.IdApartado,
-                       IdEmpleado = u.IdEmpleado,
-                       idArticulo = u.idArticulo,
-                       IdTalla = u.IdTalla,
-                       Telefono = u.Telefono,
-                       Direccion = u.Direccion,
+                       //IdEmpleado = u.IdEmpleado,
+                       //idArticulo = u.idArticulo,
+                       //IdTalla = u.IdTalla,
                        Fecha = (DateTime)u.Fecha,
                        FechaEntrega = (DateTime?)u.FechaEntrega,
                        Status = u.Status,
-                       talla = u.IdTallaNavigation.Descripcion,
-                       articulo = u.IdArticuloNavigation.Descripcion,
-                       precio = u.IdArticuloNavigation.Precio,
+                       //talla = u.IdTallaNavigation.Descripcion,
+                       //articulo = u.IdArticuloNavigation.Descripcion,
+                       //precio = u.IdArticuloNavigation.Precio,
 
                    });
                 }
@@ -221,26 +262,87 @@ namespace ServiceIndustriaHuitzil.Services
             ResponseModel response = new ResponseModel();
             try
             {
-                response.exito = false;
+                /*response.exito = false;
                 response.mensaje = "No se pudo hacer el apartado";
-                response.respuesta = "[]";
+                response.respuesta = "[]"*/
 
                 Apartados newApartado = new Apartados();
-                newApartado.idArticulo = request.idArticulo;
-                newApartado.IdEmpleado = request.IdEmpleado;
-                newApartado.Telefono = request.Telefono;
-                newApartado.IdTalla = request.IdTalla;
+                //newApartado.idArticulo = request.idArticulo;
+                newApartado.IdCliente = request.IdCliente;
+                newApartado.total = request.total;
+                newApartado.resto = request.resto;
+                //newApartado.Telefono = request.Telefono;
+                //newApartado.IdTalla = request.IdTalla;
                 newApartado.idParent = request.idParent;
                 newApartado.Fecha = (DateTime)request.Fecha;
-                newApartado.Direccion = request.Direccion;
+                //newApartado.Direccion = request.Direccion;
                 newApartado.Status = "Espera";
                 newApartado.Type = request.type;
+
+                //
+                //int idMovimiento = newMovimiento.IdMovimiento; // recuperar
                 _ctx.Apartados.Add(newApartado);
+                await _ctx.SaveChangesAsync();
+                int idApartado = newApartado.IdApartado;
+                if (request.articulosApartados?.Count() > 0)
+                {
+                    List<ApartadoArticulo> listApartadosArticulos = new List<ApartadoArticulo>();
+
+                    request.articulosApartados.ForEach(dataArticulo =>
+                    {
+
+
+                        listApartadosArticulos.Add(new ApartadoArticulo()
+                        {
+                            // IdVentaArticulo = 1,
+                            //IdVenta = idVenta,
+                            IdApartado = idApartado,
+                            IdArticulo = dataArticulo.IdArticulo,
+                            Cantidad = dataArticulo.Cantidad,
+                            PrecioUnitario = dataArticulo.PrecioUnitario,
+                            Subtotal = dataArticulo.Subtotal,
+                            // Articulo  = dataArticulo.Articulo
+
+
+                        });
+
+
+                        //Actualiza el stock
+                       /* Articulo articuloVenta = _ctx.Articulos.FirstOrDefault(x => x.IdArticulo == dataArticulo.IdArticulo);
+
+
+                        if ((Int32.Parse(articuloVenta.Existencia) - dataArticulo.Cantidad) >= 0)
+                        {
+                            articuloVenta.Existencia = (Int32.Parse(articuloVenta.Existencia) - dataArticulo.Cantidad).ToString();
+                        }
+                        else
+                        {
+                            response.exito = false;
+                            response.mensaje = "Ya no hay stock del articulo !";
+                            response.respuesta = "[]";
+                            dbContextTransaction.Rollback();
+                        }
+
+                        _ctx.Articulos.Update(articuloVenta);*/
+
+
+                    });
+                    if (listApartadosArticulos.Count() > 0)
+                    {
+                        _ctx.ApartadoArticulos.AddRange(listApartadosArticulos);
+                        //_ctx.ApartadoArticulos.AddRange(listApartadosArticulos);
+                        await _ctx.SaveChangesAsync();
+                    }
+
+
+
+                }
+
                 await _ctx.SaveChangesAsync();
 
                 response.exito = true;
-                response.mensaje = "Se insertó el cliente correctamente!!";
-                response.respuesta = newApartado;
+                response.mensaje = "Apartado realizado correctamente!!";
+                response.respuesta = "[]";
             }
             catch (Exception e)
             {
@@ -266,14 +368,13 @@ namespace ServiceIndustriaHuitzil.Services
 
                 if (existeApartado != null)
                 {
-                    existeApartado.idArticulo = request.idArticulo;
-                    existeApartado.IdEmpleado = request.IdEmpleado;
-                    existeApartado.Telefono = request.Telefono;
-                    existeApartado.IdTalla = request.IdTalla;
+                    //existeApartado.idArticulo = request.idArticulo;
+                    //existeApartado.IdEmpleado = request.IdEmpleado;
+                    //existeApartado.IdTalla = request.IdTalla;
                     existeApartado.Fecha = (DateTime)request.Fecha;
-                    existeApartado.FechaEntrega = (DateTime)request.FechaEntrega;
-                    existeApartado.Direccion = request.Direccion;
+                    existeApartado.FechaEntrega = (DateTime?)request.FechaEntrega;       
                     existeApartado.Status = request.Status;
+                    existeApartado.resto = request.resto;
                     /* existeCliente.Nombre = request.Nombre;
                      existeCliente.ApellidoPaterno = request.ApellidoPaterno;
                      existeCliente.ApellidoMaterno = request.ApellidoMaterno;
@@ -1675,7 +1776,6 @@ namespace ServiceIndustriaHuitzil.Services
                 response.respuesta = "[]";
 
                 List<PagoApartado> lista = await _ctx.PagoApartados.ToListAsync();
-                //List<Apartados> lista = await _ctx.Apartados.ToListAsync();
                 if (lista != null)
                 {
                     response.exito = true;
@@ -1711,11 +1811,8 @@ namespace ServiceIndustriaHuitzil.Services
                         IdApartado = u.IdApartado,
                         Fecha = (DateTime?)u.Fecha,
                         Cantidad = u.Cantidad,
-                        Status = u.Status,
-                        IdArticulo = u.IdArticulo,
-                        
-
-
+                        IdCaja = u.IdCaja,
+                     
                     });
                 if (pagos != null)
                 {
@@ -1734,6 +1831,45 @@ namespace ServiceIndustriaHuitzil.Services
             return response;
         }
 
+        public async Task<ResponseModel> getPagosByCaja(int IdCaja)
+        {
+            ResponseModel response = new ResponseModel();
+            try
+            {
+                response.exito = false;
+                response.mensaje = "No hay pagos pendientes";
+                response.respuesta = null;
+                List<PagoApartadoRequest> pagos = new List<PagoApartadoRequest>();
+
+                pagos = _ctx.PagoApartados.Where(x => x.IdCaja == IdCaja).ToList()
+
+                .ConvertAll(u => new PagoApartadoRequest()
+                {
+                    IdPagoApartado = u.IdPagoApartado,
+                    IdApartado = u.IdApartado,
+                    Fecha = (DateTime?)u.Fecha,
+                    Cantidad = u.Cantidad,
+                    IdCaja = u.IdCaja,
+
+                });
+                if (pagos != null)
+                {
+                    response.exito = true;
+                    response.mensaje = "Se han consultado exitosamente los apartados!!";
+                    response.respuesta = pagos;
+                }
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e.Message);
+                response.mensaje = e.Message;
+                response.exito = false;
+                response.respuesta = null;
+            }
+            return response;
+        }
+
+
         public async Task<ResponseModel> postPagoApartado(PagoApartadoRequest request)
         {
             ResponseModel response = new ResponseModel();
@@ -1747,20 +1883,13 @@ namespace ServiceIndustriaHuitzil.Services
                 newPago.IdApartado = request.IdApartado;
                 newPago.Fecha = request.Fecha;
                 newPago.Cantidad = request.Cantidad;
-
-                /*newApartado.idArticulo = request.idArticulo;
-                newApartado.IdEmpleado = request.IdEmpleado;
-                newApartado.Telefono = request.Telefono;
-                newApartado.IdTalla = request.IdTalla;
-                newApartado.Fecha = (DateTime)request.Fecha;
-                newApartado.Direccion = request.Direccion;
-                newApartado.Status = "Espera";*/
+                newPago.IdCaja = request.IdCaja;
+              
                 _ctx.PagoApartados.Add(newPago);
-                //_ctx.Apartados.Add(newApartado);
                 await _ctx.SaveChangesAsync();
 
                 response.exito = true;
-                response.mensaje = "Se insertó el cliente correctamente!!";
+                response.mensaje = "Se insertó el pago correctamente!!";
                 response.respuesta = newPago;
             }
             catch (Exception e)
@@ -3919,7 +4048,9 @@ namespace ServiceIndustriaHuitzil.Services
 
                 List<VentaRequest> listaVentas = new List<VentaRequest>();
                 List<Venta> lista = _ctx.Ventas.Where(x => x.IdCaja == idCaja).ToList();
-               
+               // List<CambiosDevolucione> listacambios = _ctx.CambiosDevoluciones.Where(x => x.IdCaja == idCaja).ToList();
+
+
                 if (lista != null)
                 {
 
@@ -3941,13 +4072,105 @@ namespace ServiceIndustriaHuitzil.Services
 
                     }
                     ); 
+
                     listaVentas.ForEach(venta => {
                         List<VentaArticulo> articulosVenta = _ctx.VentaArticulos.Include(w => w.IdArticuloNavigation)
                                                                             .Include(wa => wa.IdArticuloNavigation.IdUbicacionNavigation)
                                                                             .Include(wb => wb.IdArticuloNavigation.IdCategoriaNavigation)
                                                                             .Include(wc => wc.IdArticuloNavigation.IdTallaNavigation)
                                                                             .Where(x => x.IdVenta == venta.IdVenta).ToList();
-                        venta.ventaArticulo  = articulosVenta.ConvertAll(x => new VentaArticuloRequest()
+
+                      List<CambiosDevolucione> cambiosventaVenta = _ctx.CambiosDevoluciones.Include(w => w.IdVentaNavigation)
+                                                                          // .Include(wa => wa.IdArticuloNavigation.IdUbicacionNavigation)
+                                                                           //.Include(wb => wb.IdArticuloNavigation.IdCategoriaNavigation)
+                                                                          // .Include(wc => wc.IdArticuloNavigation.IdTallaNavigation)
+                                                                           .Where(x => x.IdVenta == venta.IdVenta).ToList();
+
+
+
+                        venta.cambiosDevoluciones = cambiosventaVenta.ConvertAll(x => new CambiosDevolucionesRequest()
+                        {
+                            IdCambioDevolucion = x.IdCambioDevolucion,
+                            IdVenta = x.IdVenta,
+                            Fecha = x.Fecha.ToString(),
+                            NoArticulos = x.NoArticulos,
+                            Subtotal = x.Subtotal,
+                            Total = x.Total,
+                            Venta = new VentaRequest()
+                            {
+                                IdVenta = x.IdVentaNavigation.IdVenta,
+                                IdCaja = x.IdVentaNavigation.IdCaja,
+                                Fecha = x.IdVentaNavigation.Fecha.ToString(),
+                                NoTicket = x.IdVentaNavigation.NoTicket,
+                                TipoPago = x.IdVentaNavigation.TipoPago,
+                                TipoVenta = x.IdVentaNavigation.TipoVenta,
+                                NoArticulos = x.IdVentaNavigation.NoArticulos,
+                                Subtotal = x.IdVentaNavigation.Subtotal,
+                                Total = x.IdVentaNavigation.Total
+                            },
+                            CambiosDevolucionesArticulos = _ctx.CambiosDevolucionesArticulos.Include(a => a.IdArticuloNavigation).ThenInclude(aa => aa.IdTallaNavigation)
+                                                                                        .Include(b => b.IdVentaArticuloNavigation).ThenInclude(ba => ba.IdArticuloNavigation)
+                                                                                        .ThenInclude(baa => baa.IdTallaNavigation).Where(y => y.IdCambioDevolucion == x.IdCambioDevolucion)
+                                                                                        .ToList().ConvertAll(x => new CambiosDevolucionesArticuloRequest()
+                                                                                        {
+                                                                                            IdCambioArticulo = x.IdCambioArticulo,
+                                                                                            IdCambioDevolucion = x.IdCambioDevolucion,
+                                                                                            IdVentaArticulo = x.IdVentaArticulo,
+                                                                                            IdArticulo = x.IdArticulo,
+                                                                                            Cantidad = x.Cantidad,
+                                                                                            Estado = x.Estado,
+                                                                                            MotivoCambio = x.MotivoCambio,
+                                                                                            PrecioAnterior = x.PrecioAnterior,
+                                                                                            PrecioActual = x.PrecioActual,
+                                                                                            Deducible = x.Deducible,
+                                                                                            Articulo = new ProductoRequest()
+                                                                                            {
+                                                                                                IdArticulo = x.IdArticuloNavigation.IdArticulo,
+                                                                                                Status = x.IdArticuloNavigation.Status,
+                                                                                                Existencia = x.IdArticuloNavigation.Existencia,
+                                                                                                Descripcion = x.IdArticuloNavigation.Descripcion,
+                                                                                                FechaIngreso = (DateTime)x.IdArticuloNavigation.FechaIngreso,
+                                                                                                idUbicacion = (int)x.IdArticuloNavigation.IdUbicacion,
+                                                                                                idCategoria = (int)x.IdArticuloNavigation.IdCategoria,
+                                                                                                idTalla = (int)x.IdArticuloNavigation.IdTalla,
+                                                                                                talla = x.IdArticuloNavigation.IdTallaNavigation.Nombre,
+                                                                                                categoria = null,
+                                                                                                ubicacion = null,
+                                                                                                sku = x.IdArticuloNavigation.Sku,
+                                                                                                precio = (decimal)x.IdArticuloNavigation.Precio,
+                                                                                                imagen = x.IdArticuloNavigation.Imagen
+                                                                                            },
+                                                                                            VentaArticulo = new VentaArticuloRequest()
+                                                                                            {
+                                                                                                IdVentaArticulo = x.IdVentaArticuloNavigation.IdVentaArticulo,
+                                                                                                IdVenta = x.IdVentaArticuloNavigation.IdVenta,
+                                                                                                IdArticulo = x.IdVentaArticuloNavigation.IdArticulo,
+                                                                                                Cantidad = x.IdVentaArticuloNavigation.Cantidad,
+                                                                                                PrecioUnitario = (decimal)x.IdVentaArticuloNavigation.PrecioUnitario,
+                                                                                                Subtotal = x.IdVentaArticuloNavigation.Subtotal,
+                                                                                                Articulo = new ProductoRequest()
+                                                                                                {
+                                                                                                    IdArticulo = x.IdVentaArticuloNavigation.IdArticuloNavigation.IdArticulo,
+                                                                                                    Status = x.IdVentaArticuloNavigation.IdArticuloNavigation.Status,
+                                                                                                    Existencia = x.IdVentaArticuloNavigation.IdArticuloNavigation.Existencia,
+                                                                                                    Descripcion = x.IdVentaArticuloNavigation.IdArticuloNavigation.Descripcion,
+                                                                                                    FechaIngreso = (DateTime)x.IdVentaArticuloNavigation.IdArticuloNavigation.FechaIngreso,
+                                                                                                    idUbicacion = (int)x.IdVentaArticuloNavigation.IdArticuloNavigation.IdUbicacion,
+                                                                                                    idCategoria = (int)x.IdVentaArticuloNavigation.IdArticuloNavigation.IdCategoria,
+                                                                                                    idTalla = (int)x.IdVentaArticuloNavigation.IdArticuloNavigation.IdTalla,
+                                                                                                    talla = x.IdVentaArticuloNavigation.IdArticuloNavigation.IdTallaNavigation.Nombre,
+                                                                                                    categoria = null,
+                                                                                                    ubicacion = null,
+                                                                                                    sku = x.IdVentaArticuloNavigation.IdArticuloNavigation.Sku,
+                                                                                                    precio = (decimal)x.IdVentaArticuloNavigation.IdArticuloNavigation.Precio,
+                                                                                                    imagen = x.IdVentaArticuloNavigation.IdArticuloNavigation.Imagen
+                                                                                                }
+                                                                                            }
+                                                                                        })
+                        });
+
+
+                      venta.ventaArticulo  = articulosVenta.ConvertAll(x => new VentaArticuloRequest()
                         {
                             IdVentaArticulo = x.IdVentaArticulo,
                             IdVenta = x.IdVenta,
@@ -3972,7 +4195,11 @@ namespace ServiceIndustriaHuitzil.Services
                                 precio = (decimal)x.IdArticuloNavigation.Precio,
                                 imagen = x.IdArticuloNavigation.Imagen
                             }
-                        });
+                        }
+                
+                        
+                        
+                        );
 
                     });
                     response.respuesta = listaVentas;

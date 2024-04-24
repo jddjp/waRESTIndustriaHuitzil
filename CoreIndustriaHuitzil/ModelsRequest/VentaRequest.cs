@@ -8,6 +8,8 @@ namespace CoreIndustriaHuitzil.ModelsRequest
 {
     public class VentaRequest
     {
+        public List<CambiosDevolucionesRequest> cambiosDevoluciones;
+
         public int IdVenta { get; set; }
         public int IdCaja { get; set; }
         public string Fecha { get; set; }

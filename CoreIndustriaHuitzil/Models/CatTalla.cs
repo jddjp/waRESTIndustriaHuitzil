@@ -8,7 +8,7 @@ namespace CoreIndustriaHuitzil.Models
         public CatTalla()
         {
             Articulos = new HashSet<Articulo>();
-            Apartados = new HashSet<Apartados>();
+            //Apartados = new HashSet<Apartados>();
             MovimientosArticulos = new HashSet<MovimientoArticulos>();
         }
       
@@ -18,7 +18,7 @@ namespace CoreIndustriaHuitzil.Models
         public bool? Visible { get; set; }
 
         public virtual ICollection<Articulo> Articulos { get; set; }
-        public virtual ICollection<Apartados> Apartados { get; set; }
+       // public virtual ICollection<Apartados> Apartados { get; set; }
 
           public virtual ICollection<MovimientoArticulos> MovimientosArticulos { get; set; }
     }

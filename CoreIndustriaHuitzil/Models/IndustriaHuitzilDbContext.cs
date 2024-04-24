@@ -35,6 +35,7 @@ namespace CoreIndustriaHuitzil.Models
         public virtual DbSet<User> Users { get; set; } = null!;
         public virtual DbSet<Venta> Ventas { get; set; } = null!;
         public virtual DbSet<VentaArticulo> VentaArticulos { get; set; } = null!;
+        public virtual DbSet<ApartadoArticulo> ApartadoArticulos { get; set; } = null;
         public virtual DbSet<Vista> Vistas { get; set; } = null!;
         public virtual DbSet<VistasRol> VistasRols { get; set; } = null!;
 
@@ -60,38 +61,37 @@ namespace CoreIndustriaHuitzil.Models
 
                 entity.Property(e => e.IdApartado).HasColumnName("id_Apartado");
 
-                entity.Property(e => e.IdEmpleado)
+                entity.Property(e => e.IdCliente)
                     .HasMaxLength(50)
-                    .HasColumnName("id_empleado")
+                    .HasColumnName("id_cliente")
                     .IsFixedLength();
                 entity.Property(e => e.idParent)
                    .HasMaxLength(50)
                    .HasColumnName("id_parent")
                    .IsFixedLength();
-                entity.Property(e => e.idArticulo)
+                /*entity.Property(e => e.idArticulo)
                     .HasMaxLength(50)
                     .HasColumnName("id_articulo")
-                    .IsFixedLength();
-
-                entity.Property(e => e.Direccion)
-                    .HasMaxLength(50)
-                    .HasColumnName("direccion")
                     .IsFixedLength();
 
                 entity.Property(e => e.IdTalla)
                     .HasMaxLength(50)
                     .HasColumnName("idTalla")
-                    .IsFixedLength();
-
-                entity.Property(e => e.Telefono)
-                    .HasMaxLength(50)
-                    .HasColumnName("telefono")
-                    .IsFixedLength();
+                    .IsFixedLength();*/
 
                 entity.Property(e => e.Fecha)
                     .HasMaxLength(50)
                     .HasColumnName("fecha")
                     .IsFixedLength();
+                entity.Property(e => e.total)
+                   .HasMaxLength(50)
+                   .HasColumnName("total")
+                   .IsFixedLength();
+
+                entity.Property(e => e.resto)
+                  .HasMaxLength(50)
+                  .HasColumnName("resto")
+                  .IsFixedLength();
 
                 entity.Property(e => e.Status)
                     .HasMaxLength(50)
@@ -108,7 +108,7 @@ namespace CoreIndustriaHuitzil.Models
                     .HasColumnName("fecha_entrega")
                     .IsFixedLength();
 
-                entity.HasOne(d => d.IdTallaNavigation)
+               /* entity.HasOne(d => d.IdTallaNavigation)
                    .WithMany(p => p.Apartados)
                    .HasForeignKey(d => d.IdTalla)
                    .HasConstraintName("FK_Articulos_Tallas");
@@ -116,13 +116,47 @@ namespace CoreIndustriaHuitzil.Models
                 entity.HasOne(d => d.IdArticuloNavigation)
                    .WithMany(p => p.Apartados)
                    .HasForeignKey(d => d.idArticulo)
-                   .HasConstraintName("FK_Apartados_Articulos");
+                   .HasConstraintName("FK_Apartados_Articulos");*/
 
                 entity.HasOne(d => d.IdClienteNavigation)
                 .WithMany(p => p.Apartados)
-                .HasForeignKey(d => d.IdEmpleado)
+                .HasForeignKey(d => d.IdCliente)
                 .HasConstraintName("FK_Apartados_clientes");
 
+            });
+           
+            modelBuilder.Entity<ApartadoArticulo>(entity =>
+            {
+                entity.HasKey(e => e.IdApartadoArticulo)
+                    .HasName("PK__ApartadoArt__A3985937EAF0CFF6");
+
+                entity.Property(e => e.IdApartadoArticulo).HasColumnName("id_apartado_articulo");
+
+                entity.Property(e => e.Cantidad).HasColumnName("cantidad");
+
+                entity.Property(e => e.IdArticulo).HasColumnName("id_articulo");
+
+                entity.Property(e => e.IdApartado).HasColumnName("id_apartado");
+
+                entity.Property(e => e.PrecioUnitario)
+                    .HasColumnType("decimal(18, 2)")
+                    .HasColumnName("precio_unitario");
+
+                entity.Property(e => e.Subtotal)
+                    .HasColumnType("decimal(18, 2)")
+                    .HasColumnName("subtotal");
+
+                entity.HasOne(d => d.IdArticuloNavigation)
+                    .WithMany(p => p.ApartadoArticulos)
+                    .HasForeignKey(d => d.IdArticulo)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK__VentaArticulos_Articulos");
+
+                entity.HasOne(d => d.IdApartadoNavigation)
+                    .WithMany(p => p.ApartadoArticulos)
+                    .HasForeignKey(d => d.IdApartado)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK__ApartadosArticulos_Ventas");
             });
 
             modelBuilder.Entity<Articulo>(entity =>
@@ -536,9 +570,9 @@ namespace CoreIndustriaHuitzil.Models
                     .HasColumnName("id_apartado")
                     .IsFixedLength();
 
-                entity.Property(e => e.IdArticulo)
+                entity.Property(e => e.IdCaja)
                     .HasMaxLength(50)
-                    .HasColumnName("id_articulo")
+                    .HasColumnName("id_caja")
                     .IsFixedLength();
 
                 entity.Property(e => e.IdCliente)
@@ -552,10 +586,10 @@ namespace CoreIndustriaHuitzil.Models
                     .IsFixedLength();
 
 
-                entity.Property(e => e.Status)
+               /*entity.Property(e => e.Status)
                     .HasMaxLength(50)
                     .HasColumnName("status")
-                    .IsFixedLength();
+                    .IsFixedLength();*/
 
                 entity.Property(e => e.Fecha)
                     .HasMaxLength(50)

@@ -22,6 +22,14 @@ namespace waRESTIndustriaHuitzil.Controllers
             return Ok(await _service.getApartados());
         }
 
+        [HttpGet("ArticuloByApartado")]
+        [Authorize(AuthenticationSchemes = Microsoft.AspNetCore.Authentication.JwtBearer.JwtBearerDefaults.AuthenticationScheme)]
+        public async Task<IActionResult> GetArticulosApartdo(int idApartado)
+        {
+            return Ok(await _service.getArticulosApartado(idApartado));
+        }
+
+
         [HttpGet("Consulta/Usuario")]
         [Authorize(AuthenticationSchemes = Microsoft.AspNetCore.Authentication.JwtBearer.JwtBearerDefaults.AuthenticationScheme)]
         public async Task<IActionResult> GetApartadosByUsuario(int idUsuario,string type, int IdApartado)

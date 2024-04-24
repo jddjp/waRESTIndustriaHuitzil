@@ -9,7 +9,8 @@ namespace CoreIndustriaHuitzil.Models
         {
             CambiosDevolucionesArticulos = new HashSet<CambiosDevolucionesArticulo>();
             VentaArticulos = new HashSet<VentaArticulo>();
-            Apartados = new HashSet<Apartados>();
+            ApartadoArticulos = new HashSet<ApartadoArticulo>();
+           // Apartados = new HashSet<Apartados>();
         }
 
         public int IdArticulo { get; set; }
@@ -29,7 +30,8 @@ namespace CoreIndustriaHuitzil.Models
         public virtual CatUbicacione? IdUbicacionNavigation { get; set; }
         public virtual ICollection<CambiosDevolucionesArticulo> CambiosDevolucionesArticulos { get; set; }
         public virtual ICollection<VentaArticulo> VentaArticulos { get; set; }
+        public virtual ICollection<ApartadoArticulo> ApartadoArticulos { get; set; }
 
-        public virtual ICollection<Apartados> Apartados { get; set; }
+        //public virtual ICollection<Apartados> Apartados { get; set; }
     }
 }

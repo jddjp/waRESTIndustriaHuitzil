@@ -29,6 +29,13 @@ namespace waRESTIndustriaHuitzil.Controllers
             return Ok(await _service.getPagosByApartado(idApartado));
         }
 
+        [HttpGet("Consulta/Caja")]
+        [Authorize(AuthenticationSchemes = Microsoft.AspNetCore.Authentication.JwtBearer.JwtBearerDefaults.AuthenticationScheme)]
+        public async Task<IActionResult> GetPagosByCaja(int idCaja)
+        {
+            return Ok(await _service.getPagosByCaja(idCaja));
+        }
+
         #endregion
 
         #region POST

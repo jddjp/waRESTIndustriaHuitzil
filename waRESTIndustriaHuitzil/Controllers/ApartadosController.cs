@@ -22,6 +22,13 @@ namespace waRESTIndustriaHuitzil.Controllers
             return Ok(await _service.getApartados());
         }
 
+        [HttpGet("ConsultaByUbicacion")]
+        [Authorize(AuthenticationSchemes = Microsoft.AspNetCore.Authentication.JwtBearer.JwtBearerDefaults.AuthenticationScheme)]
+        public async Task<IActionResult> GetApartadosByUbicacion(string ubicacion)
+        {
+            return Ok(await _service.getApartadosByUbicacion(ubicacion));
+        }
+
         [HttpGet("ArticuloByApartado")]
         [Authorize(AuthenticationSchemes = Microsoft.AspNetCore.Authentication.JwtBearer.JwtBearerDefaults.AuthenticationScheme)]
         public async Task<IActionResult> GetArticulosApartdo(int idApartado)
@@ -40,7 +47,7 @@ namespace waRESTIndustriaHuitzil.Controllers
         #endregion
 
         #region POST
-        [HttpPost("Agrega")]
+        [HttpPost("Agrega")]    
         [Authorize(AuthenticationSchemes = Microsoft.AspNetCore.Authentication.JwtBearer.JwtBearerDefaults.AuthenticationScheme)]
         public async Task<IActionResult> AgregarApartado([FromBody] ApartadosRequest request)
         {

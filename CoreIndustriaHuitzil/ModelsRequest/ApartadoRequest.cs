@@ -19,7 +19,8 @@ namespace CoreIndustriaHuitzil.ModelsRequest
             public string? Status { get; set; }
             public string? type { get;  set; }
             public string? cliente { get; set;}
-            public List<ApartadoArticuloRequest> articulosApartados { get; set; } = new List<ApartadoArticuloRequest>();
+            public string? ubicacion { get; set; }
+        public List<ApartadoArticuloRequest> articulosApartados { get; set; } = new List<ApartadoArticuloRequest>();
     }
 
     public class ApartadoArticuloRequest

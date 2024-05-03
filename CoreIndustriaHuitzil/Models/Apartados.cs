@@ -22,8 +22,7 @@ namespace CoreIndustriaHuitzil.Models
         /// public string cliene { set; get; }
         /// </summary>
         public string? Type { get; set; }
-        //public virtual CatTalla? IdTallaNavigation { get; set; }
-        //public virtual Articulo? IdArticuloNavigation { get; set; }
+        public string? ubicacion { get; set; }
         public virtual CatCliente? IdClienteNavigation { get; set; }
 
         public virtual ICollection<ApartadoArticulo> ApartadoArticulos { get; set; }

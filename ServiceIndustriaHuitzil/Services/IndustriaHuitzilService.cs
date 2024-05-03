@@ -145,6 +145,51 @@ namespace ServiceIndustriaHuitzil.Services
             return response;
         }
 
+        public async Task<ResponseModel> getApartadosByUbicacion(string ubicacion)
+        {
+            ResponseModel response = new ResponseModel();
+            try
+            {
+                response.exito = false;
+                response.mensaje = "No hay clientes para mostrar";
+                response.respuesta = "[]";
+                List<ApartadosRequest> apartados = new List<ApartadosRequest>();
+                apartados = _ctx.Apartados
+                    .Where(x => x.ubicacion == ubicacion)
+                    .Where(x => x.Type.Equals("A") || x.Type.Equals("E"))
+
+                    .Include(c => c.IdClienteNavigation).OrderByDescending(apartado => apartado.Status).ToList()
+                     .ConvertAll(u => new ApartadosRequest()
+                     {
+                         IdApartado = u.IdApartado,
+                         IdCliente = u.IdCliente,
+                         total = u.total,
+                         ubicacion = u.ubicacion,
+                         resto = u.resto,
+                         Fecha = (DateTime)u.Fecha,
+                         FechaEntrega = (DateTime?)u.FechaEntrega,
+                         Status = u.Status,
+                         type = u.Type,
+                         cliente = u.IdClienteNavigation.Nombre + " " + u.IdClienteNavigation.ApellidoPaterno + " " + u.IdClienteNavigation.ApellidoMaterno
+
+                     });
+                if (apartados != null)
+                {
+                    response.exito = true;
+                    response.mensaje = "Se han consultado exitosamente los apartados!!";
+                    response.respuesta = apartados;
+                }
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e.Message);
+                response.mensaje = e.Message;
+                response.exito = false;
+                response.respuesta = "[]";
+            }
+            return response;
+        }
+
         public async Task<ResponseModel> getArticulosApartado(int IdApartado)
         {
             ResponseModel response = new ResponseModel();
@@ -271,6 +316,7 @@ namespace ServiceIndustriaHuitzil.Services
                 newApartado.IdCliente = request.IdCliente;
                 newApartado.total = request.total;
                 newApartado.resto = request.resto;
+                newApartado.ubicacion = request.ubicacion;
                 //newApartado.Telefono = request.Telefono;
                 //newApartado.IdTalla = request.IdTalla;
                 newApartado.idParent = request.idParent;

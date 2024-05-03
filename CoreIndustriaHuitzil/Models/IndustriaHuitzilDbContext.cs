@@ -69,16 +69,12 @@ namespace CoreIndustriaHuitzil.Models
                    .HasMaxLength(50)
                    .HasColumnName("id_parent")
                    .IsFixedLength();
-                /*entity.Property(e => e.idArticulo)
-                    .HasMaxLength(50)
-                    .HasColumnName("id_articulo")
-                    .IsFixedLength();
 
-                entity.Property(e => e.IdTalla)
-                    .HasMaxLength(50)
-                    .HasColumnName("idTalla")
-                    .IsFixedLength();*/
-
+                entity.Property(e => e.ubicacion)
+                 .HasMaxLength(50)
+                 .IsUnicode(false)
+                 .HasColumnName("ubicacion");
+              
                 entity.Property(e => e.Fecha)
                     .HasMaxLength(50)
                     .HasColumnName("fecha")

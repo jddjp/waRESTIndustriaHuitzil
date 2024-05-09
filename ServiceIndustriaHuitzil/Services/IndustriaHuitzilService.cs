@@ -157,7 +157,6 @@ namespace ServiceIndustriaHuitzil.Services
                 apartados = _ctx.Apartados
                     .Where(x => x.ubicacion == ubicacion)
                     .Where(x => x.Type.Equals("A") || x.Type.Equals("E"))
-
                     .Include(c => c.IdClienteNavigation).OrderByDescending(apartado => apartado.Status).ToList()
                      .ConvertAll(u => new ApartadosRequest()
                      {
@@ -170,7 +169,7 @@ namespace ServiceIndustriaHuitzil.Services
                          FechaEntrega = (DateTime?)u.FechaEntrega,
                          Status = u.Status,
                          type = u.Type,
-                         cliente = u.IdClienteNavigation.Nombre + " " + u.IdClienteNavigation.ApellidoPaterno + " " + u.IdClienteNavigation.ApellidoMaterno
+                        // cliente = u.IdClienteNavigation.Nombre + " " + u.IdClienteNavigation.ApellidoPaterno + " " + u.IdClienteNavigation.ApellidoMaterno
 
                      });
                 if (apartados != null)
@@ -247,24 +246,29 @@ namespace ServiceIndustriaHuitzil.Services
                 List<ApartadosRequest> apartados = new List<ApartadosRequest>();
                 if (type.Equals("I"))
                 {
-                    apartados = _ctx.Apartados.Where(x => x.idParent == IdApartado)
-                        .OrderByDescending(apartado => apartado.Status).ToList()
-                        .ConvertAll(u => new ApartadosRequest()
-                        {
-                            IdApartado = u.IdApartado,
-                            //IdEmpleado = u.IdEmpleado,
-                            //idArticulo = u.idArticulo,
-                            idParent = IdApartado,
-                            //IdTalla = u.IdTalla,
-                            Fecha = (DateTime)u.Fecha,
-                            FechaEntrega = (DateTime?)u.FechaEntrega,
-                            Status = u.Status,
-                            //talla = u.IdTallaNavigation.Descripcion,
-                            //articulo = u.IdArticuloNavigation.Descripcion,
-                            //precio = u.IdArticuloNavigation.Precio
+                    apartados = _ctx.Apartados
+                     .Where(x => x.IdCliente == IdUsuario && x.Type == type)
+                     .OrderByDescending(apartado => apartado.Status).ToList()
+                .ConvertAll(u => new ApartadosRequest()
+                {
+                    IdApartado = u.IdApartado,
+                    Fecha = (DateTime)u.Fecha,
+                    FechaEntrega = (DateTime?)u.FechaEntrega,
+                    Status = u.Status,
+
+                });
+                    /* apartados = _ctx.Apartados.Where(x => x.idParent == IdApartado)
+                         .OrderByDescending(apartado => apartado.Status).ToList()
+                         .ConvertAll(u => new ApartadosRequest()
+                         {
+                             IdApartado = u.IdApartado,
+                             idParent = IdApartado,
+                             Fecha = (DateTime)u.Fecha,
+                             FechaEntrega = (DateTime?)u.FechaEntrega,
+                             Status = u.Status,
 
 
-                        });
+                         });*/
                 }
                 else {
                     apartados = _ctx.Apartados
@@ -273,15 +277,9 @@ namespace ServiceIndustriaHuitzil.Services
                    .ConvertAll(u => new ApartadosRequest()
                    {
                        IdApartado = u.IdApartado,
-                       //IdEmpleado = u.IdEmpleado,
-                       //idArticulo = u.idArticulo,
-                       //IdTalla = u.IdTalla,
                        Fecha = (DateTime)u.Fecha,
                        FechaEntrega = (DateTime?)u.FechaEntrega,
                        Status = u.Status,
-                       //talla = u.IdTallaNavigation.Descripcion,
-                       //articulo = u.IdArticuloNavigation.Descripcion,
-                       //precio = u.IdArticuloNavigation.Precio,
 
                    });
                 }
@@ -319,7 +317,7 @@ namespace ServiceIndustriaHuitzil.Services
                 newApartado.ubicacion = request.ubicacion;
                 //newApartado.Telefono = request.Telefono;
                 //newApartado.IdTalla = request.IdTalla;
-                newApartado.idParent = request.idParent;
+              //  newApartado.idParent = request.idParent;
                 newApartado.Fecha = (DateTime)request.Fecha;
                 //newApartado.Direccion = request.Direccion;
                 newApartado.Status = "Espera";
@@ -691,6 +689,7 @@ namespace ServiceIndustriaHuitzil.Services
                     venta.NoArticulos = result.NoArticulos;
                     venta.Subtotal = result.Subtotal;
                     venta.Total = result.Total;
+                    venta.Status = result.Status;
                     venta.ventaArticulo = articulosVenta.ConvertAll(x => new VentaArticuloRequest()
                     {
                         IdVentaArticulo = x.IdVentaArticulo,
@@ -1849,15 +1848,16 @@ namespace ServiceIndustriaHuitzil.Services
                 response.respuesta = null;
                 List<PagoApartadoRequest> pagos = new List<PagoApartadoRequest>();
                 
-                pagos = _ctx.PagoApartados.Where(x => x.IdApartado == IdApartado).ToList()
-
-                .ConvertAll(u => new PagoApartadoRequest()
+                pagos = _ctx.PagoApartados.Where(x => x.IdApartado == IdApartado).ToList().ConvertAll(u => new PagoApartadoRequest()
                     {
                         IdPagoApartado = u.IdPagoApartado,
                         IdApartado = u.IdApartado,
                         Fecha = (DateTime?)u.Fecha,
                         Cantidad = u.Cantidad,
                         IdCaja = u.IdCaja,
+                        MontoEfectivo=u.Tarjeta,
+                        MontoTarjeta=u.Efectivo,
+                        TipoPagoValida=u.TipoPago,
                      
                     });
                 if (pagos != null)
@@ -1930,7 +1930,10 @@ namespace ServiceIndustriaHuitzil.Services
                 newPago.Fecha = request.Fecha;
                 newPago.Cantidad = request.Cantidad;
                 newPago.IdCaja = request.IdCaja;
-              
+                newPago.Tarjeta= request.MontoTarjeta;
+                newPago.Efectivo= request.MontoEfectivo;
+                newPago.TipoPago = request.TipoPagoValida;
+
                 _ctx.PagoApartados.Add(newPago);
                 await _ctx.SaveChangesAsync();
 
@@ -4249,6 +4252,92 @@ namespace ServiceIndustriaHuitzil.Services
 
                     });
                     response.respuesta = listaVentas;
+                }
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e.Message);
+                response.mensaje = e.Message;
+                response.exito = false;
+                response.respuesta = "[]";
+            }
+            return response;
+        }
+
+        public async Task<ResponseModel> postCancelacionVenta(CambiosDevolucionesRequest request)
+        {
+            ResponseModel response = new ResponseModel();
+            try
+            {
+                response.exito = false;
+                response.mensaje = "No se pudo cancelar la Venta";
+                response.respuesta = "[]";
+
+                Venta existeVenta = await _ctx.Ventas.FirstOrDefaultAsync(x => x.IdVenta == request.IdVenta);
+                List<VentaArticulo> articulos = _ctx.VentaArticulos.Where(x => x.IdVenta == request.IdVenta)
+                                       .ToList();
+
+                if (existeVenta != null)
+                {
+                    Venta Venta = new Venta();
+
+                    using (var dbContextTransaction = _ctx.Database.BeginTransaction())
+                    {
+                        try
+                        {
+
+                            DateTime fechaCambio = setFormatDate(request.Fecha);
+                            existeVenta.Fecha = fechaCambio;
+                            existeVenta.Status = "CANCELADA";
+                            _ctx.Update(existeVenta);
+                            await _ctx.SaveChangesAsync();
+
+                            //Inserta los articulos cambiados o devueltos si es que tiene
+                            if (articulos?.Count() > 0)
+                            {
+                                // List<CambiosDevolucionesArticulo> lstCambiosDevolucionesArticulos = new List<CambiosDevolucionesArticulo>();
+                                articulos.ForEach(dataArticulo =>
+                                {
+                                    VentaArticulo ventaArticulo = _ctx.VentaArticulos.FirstOrDefault(x => x.IdVentaArticulo == dataArticulo.IdVentaArticulo);
+                                
+
+                                    //Actualiza el stock
+                                    Articulo articuloVenta = _ctx.Articulos.FirstOrDefault(x => x.IdArticulo == ventaArticulo.IdArticulo);
+
+                                    articuloVenta.Existencia = (Int32.Parse(articuloVenta.Existencia) + dataArticulo.Cantidad).ToString();
+
+                                    _ctx.Articulos.Update(articuloVenta);
+                                   
+
+                                });
+
+                                
+                                await _ctx.SaveChangesAsync();
+
+                            }
+
+
+                            //Hacemos commit de todos los datos
+                            dbContextTransaction.Commit();
+                            response.exito = true;
+                            response.mensaje = "Se ha realidado la cancelacion correctamente!";
+                            response.respuesta = "[]";
+
+                        }
+                        catch (Exception ex)
+                        {
+                            response.exito = false;
+                            response.mensaje = ex.Message;
+                            response.respuesta = "[]";
+                            dbContextTransaction.Rollback();
+                            return response;
+                        }
+                    }
+
+                }
+                else
+                {
+                    response.mensaje = "La venta No fue encontrada";
                 }
             }
             catch (Exception e)

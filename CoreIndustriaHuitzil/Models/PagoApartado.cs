@@ -11,9 +11,13 @@ namespace CoreIndustriaHuitzil.Models
         public int IdPagoApartado { get; set; }
         public int? IdApartado { get; set; }
         public int? IdCaja { get; set; }
-        public int? IdCliente { get; set; }
-        public int? Cantidad { get; set; }
-        //public string? Status { get; set; }
+        public decimal? Cantidad { get; set; }
         public DateTime? Fecha { get; set; }
+
+        public decimal? Tarjeta { get; set; }
+
+        public decimal? Efectivo { get; set; }
+
+        public String? TipoPago { get; set; }
     }
 }

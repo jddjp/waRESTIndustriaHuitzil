@@ -65,11 +65,7 @@ namespace CoreIndustriaHuitzil.Models
                     .HasMaxLength(50)
                     .HasColumnName("id_cliente")
                     .IsFixedLength();
-                entity.Property(e => e.idParent)
-                   .HasMaxLength(50)
-                   .HasColumnName("id_parent")
-                   .IsFixedLength();
-
+               
                 entity.Property(e => e.ubicacion)
                  .HasMaxLength(50)
                  .IsUnicode(false)
@@ -570,11 +566,7 @@ namespace CoreIndustriaHuitzil.Models
                     .HasMaxLength(50)
                     .HasColumnName("id_caja")
                     .IsFixedLength();
-
-                entity.Property(e => e.IdCliente)
-                    .HasMaxLength(50)
-                    .HasColumnName("id_cliente")
-                    .IsFixedLength();
+              
 
                 entity.Property(e => e.Cantidad)
                     .HasMaxLength(50)
@@ -582,10 +574,22 @@ namespace CoreIndustriaHuitzil.Models
                     .IsFixedLength();
 
 
-               /*entity.Property(e => e.Status)
+               entity.Property(e => e.TipoPago)
                     .HasMaxLength(50)
-                    .HasColumnName("status")
-                    .IsFixedLength();*/
+                    .HasColumnName("tipo_pago")
+                    .IsFixedLength();
+
+
+                entity.Property(e => e.Tarjeta)
+                  .HasMaxLength(50)
+                  .HasColumnName("tarjeta")
+                  .IsFixedLength();
+
+                entity.Property(e => e.Efectivo)
+                  .HasMaxLength(50)
+                  .HasColumnName("efectivo")
+                  .IsFixedLength();
+
 
                 entity.Property(e => e.Fecha)
                     .HasMaxLength(50)

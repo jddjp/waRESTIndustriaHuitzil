@@ -14,7 +14,7 @@ namespace CoreIndustriaHuitzil.Models
         public int? resto { get; set; }
         //public int? idArticulo { get; set; }
         //public int? IdTalla { get; set; }
-        public int? idParent { get; set; }
+        //public int? idParent { get; set; }
         public DateTime Fecha { get; set; }
         public DateTime? FechaEntrega { get; set; }
         public string? Status { get; set; }

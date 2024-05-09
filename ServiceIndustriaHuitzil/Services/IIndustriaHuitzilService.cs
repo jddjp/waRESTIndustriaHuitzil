@@ -158,6 +158,7 @@ namespace ServiceIndustriaHuitzil.Services
         #region Ventas 
         //Task<ResponseModel> searchVentaByNoTicket(string noTicket);
         //Task<ResponseModel> getCambiosyDevoluciones();
+        Task<ResponseModel> postCancelacionVenta(CambiosDevolucionesRequest request);
         Task<ResponseModel> postAddVentas(VentaRequest venta);
         Task<ResponseModel> getVentas();
         Task<ResponseModel> getVentasByDates(DateTime dateI , DateTime dateF);

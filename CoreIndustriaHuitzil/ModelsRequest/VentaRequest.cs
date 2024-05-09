@@ -25,6 +25,7 @@ namespace CoreIndustriaHuitzil.ModelsRequest
 
         public int? Descuento { get; set; }
 
+        public string? Status { get; set; }
         public virtual CajaRequest? Caja { get; set; } = null!;
 
         public List<VentaArticuloRequest> ventaArticulo { get; set; } = new List<VentaArticuloRequest>();

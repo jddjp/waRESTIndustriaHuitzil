@@ -74,6 +74,14 @@ namespace waRESTIndustriaHuitzil.Controllers
         #endregion
 
         #region Ventas 
+
+        [HttpPost("Sales/cancela")]
+        [Authorize(AuthenticationSchemes = Microsoft.AspNetCore.Authentication.JwtBearer.JwtBearerDefaults.AuthenticationScheme)]
+        public async Task<IActionResult> AgregaCancelacionVenta([FromBody] CambiosDevolucionesRequest request)
+        {
+            return Ok(await _service.postCancelacionVenta(request));
+        }
+
         [HttpPost("Sales/Agrega")]
         [Authorize(AuthenticationSchemes = Microsoft.AspNetCore.Authentication.JwtBearer.JwtBearerDefaults.AuthenticationScheme)]
         public async Task<IActionResult> AgregaVentas([FromBody] VentaRequest request)

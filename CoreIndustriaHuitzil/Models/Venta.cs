@@ -20,11 +20,11 @@ namespace CoreIndustriaHuitzil.Models
         public int NoArticulos { get; set; }
         public decimal Subtotal { get; set; }
         public decimal? Total { get; set; }
-
         public decimal? Tarjeta { get; set; }
         public decimal? Efectivo { get; set; }
-
         public int? Descuento { get; set; }
+
+        public string Status { get; set; }
 
         public virtual Caja IdCajaNavigation { get; set; } = null!;
         public virtual ICollection<CambiosDevolucione> CambiosDevoluciones { get; set; }

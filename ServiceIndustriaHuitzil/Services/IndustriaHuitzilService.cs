@@ -151,11 +151,13 @@ namespace ServiceIndustriaHuitzil.Services
             try
             {
                 response.exito = false;
-                response.mensaje = "No hay clientes para mostrar";
+                response.mensaje = "No hay Apartados para mostrar";
                 response.respuesta = "[]";
                 List<ApartadosRequest> apartados = new List<ApartadosRequest>();
-                apartados = _ctx.Apartados
-                    .Where(x => x.ubicacion == ubicacion)
+
+                if (ubicacion == "all")
+                {
+                    apartados = _ctx.Apartados
                     .Where(x => x.Type.Equals("A") || x.Type.Equals("E"))
                     .Include(c => c.IdClienteNavigation).OrderByDescending(apartado => apartado.Status).ToList()
                      .ConvertAll(u => new ApartadosRequest()
@@ -169,9 +171,37 @@ namespace ServiceIndustriaHuitzil.Services
                          FechaEntrega = (DateTime?)u.FechaEntrega,
                          Status = u.Status,
                          type = u.Type,
-                        // cliente = u.IdClienteNavigation.Nombre + " " + u.IdClienteNavigation.ApellidoPaterno + " " + u.IdClienteNavigation.ApellidoMaterno
+                         cliente = u.IdClienteNavigation.Nombre,
+                         telefono1= u.IdClienteNavigation.Telefono1
 
                      });
+
+                }
+                else {
+                    apartados = _ctx.Apartados
+                     .Where(x => x.ubicacion == ubicacion)
+                      .Where(x => x.Type.Equals("A") || x.Type.Equals("E") && x.ubicacion == ubicacion)
+                      .Include(c => c.IdClienteNavigation).OrderByDescending(apartado => apartado.Status).ToList()
+                       .ConvertAll(u => new ApartadosRequest()
+                       {
+                           IdApartado = u.IdApartado,
+                           IdCliente = u.IdCliente,
+                           total = u.total,
+                           ubicacion = u.ubicacion,
+                           resto = u.resto,
+                           Fecha = (DateTime)u.Fecha,
+                           FechaEntrega = (DateTime?)u.FechaEntrega,
+                           Status = u.Status,
+                           type = u.Type,
+                           cliente = u.IdClienteNavigation.Nombre ,
+                           telefono1 = u.IdClienteNavigation.Telefono1
+
+                       });
+
+                }
+
+
+
                 if (apartados != null)
                 {
                     response.exito = true;
@@ -957,6 +987,45 @@ namespace ServiceIndustriaHuitzil.Services
         #endregion
 
         #region Clientes
+        public async Task<ResponseModel> getClientesbySucursal(string sucursal)
+        {
+            ResponseModel response = new ResponseModel();
+            try
+            {
+                response.exito = false;
+                response.mensaje = "No hay clientes para mostrar";
+                response.respuesta = "[]";
+              
+                List<CatCliente> lista = new List<CatCliente>();
+                if (sucursal == "all")
+                {
+                    lista = _ctx.CatClientes.Where(x => x.Visible == true).ToList();
+
+                }
+                else
+                {
+                    lista = _ctx.CatClientes.Where(x => x.Visible == true && x.Direccion == sucursal).ToList();
+                }
+
+                    if (lista != null)
+                {
+                    response.exito = true;
+                    response.mensaje = "Se han consultado exitosamente los clientes!!";
+                    response.respuesta = lista;
+                }
+
+
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e.Message);
+                response.mensaje = e.Message;
+                response.exito = false;
+                response.respuesta = "[]";
+            }
+            return response;
+        }
+
         public async Task<ResponseModel> getClientes()
         {
             ResponseModel response = new ResponseModel();
@@ -1896,6 +1965,9 @@ namespace ServiceIndustriaHuitzil.Services
                     Fecha = (DateTime?)u.Fecha,
                     Cantidad = u.Cantidad,
                     IdCaja = u.IdCaja,
+                    MontoTarjeta=u.Tarjeta,
+                    MontoEfectivo=u.Efectivo,
+                    TipoPagoValida=u.TipoPago
 
                 });
                 if (pagos != null)
@@ -3910,6 +3982,7 @@ namespace ServiceIndustriaHuitzil.Services
                             newVenta.Tarjeta = request.Tarjeta;
                             newVenta.Efectivo = request.Efectivo;
                             newVenta.Descuento = request.Descuento;
+                        newVenta.Status = "CONCLUIDA";
 
                         _ctx.Add(newVenta);
                          await _ctx.SaveChangesAsync();
@@ -4097,12 +4170,10 @@ namespace ServiceIndustriaHuitzil.Services
 
                 List<VentaRequest> listaVentas = new List<VentaRequest>();
                 List<Venta> lista = _ctx.Ventas.Where(x => x.IdCaja == idCaja).ToList();
-               // List<CambiosDevolucione> listacambios = _ctx.CambiosDevoluciones.Where(x => x.IdCaja == idCaja).ToList();
-
-
+               //List<CambiosDevolucione> listacambios = _ctx.CambiosDevoluciones.Where(x => x.IdCaja == idCaja).ToList();
+               
                 if (lista != null)
                 {
-
                     response.exito = true;
                     response.mensaje = "Se han consultado exitosamente las Ventas!!";
                     listaVentas = lista.ConvertAll(x => new VentaRequest()
@@ -4118,7 +4189,7 @@ namespace ServiceIndustriaHuitzil.Services
                         Tarjeta = x.Tarjeta,
                         Efectivo = x.Efectivo,
                         Total = x.Total,
-
+                        Status=x.Status,
                     }
                     ); 
 

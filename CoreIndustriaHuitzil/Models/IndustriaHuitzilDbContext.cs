@@ -35,7 +35,7 @@ namespace CoreIndustriaHuitzil.Models
         public virtual DbSet<User> Users { get; set; } = null!;
         public virtual DbSet<Venta> Ventas { get; set; } = null!;
         public virtual DbSet<VentaArticulo> VentaArticulos { get; set; } = null!;
-        public virtual DbSet<ApartadoArticulo> ApartadoArticulos { get; set; } = null;
+        public virtual DbSet<ApartadoArticulo> ApartadoArticulos { get; set; } = null!;
         public virtual DbSet<Vista> Vistas { get; set; } = null!;
         public virtual DbSet<VistasRol> VistasRols { get; set; } = null!;
 
@@ -799,6 +799,11 @@ namespace CoreIndustriaHuitzil.Models
                     .HasMaxLength(50)
                     .IsUnicode(false)
                     .HasColumnName("tipo_venta");
+
+                entity.Property(e => e.Status)
+                  .HasMaxLength(50)
+                  .IsUnicode(false)
+                  .HasColumnName("status");
 
                 entity.Property(e => e.Total)
                     .HasColumnType("decimal(18, 2)")

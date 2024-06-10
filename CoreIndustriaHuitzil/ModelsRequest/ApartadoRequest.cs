@@ -20,6 +20,9 @@ namespace CoreIndustriaHuitzil.ModelsRequest
             public string? type { get;  set; }
             public string? cliente { get; set;}
             public string? ubicacion { get; set; }
+
+        public string? telefono1 { get; set; }
+        
         public List<ApartadoArticuloRequest> articulosApartados { get; set; } = new List<ApartadoArticuloRequest>();
     }
 

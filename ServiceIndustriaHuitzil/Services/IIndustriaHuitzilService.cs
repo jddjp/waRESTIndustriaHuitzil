@@ -41,6 +41,7 @@ namespace ServiceIndustriaHuitzil.Services
 
         #region Clientes
         Task<ResponseModel> getClientes();
+        Task<ResponseModel> getClientesbySucursal(string sucursal);
         Task<ResponseModel> postCliente(ClienteRequest cliente);
         Task<ResponseModel> putCliente(ClienteRequest cliente);
         Task<ResponseModel> deleteCliente(ClienteRequest cliente);

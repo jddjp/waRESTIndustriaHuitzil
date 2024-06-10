@@ -22,6 +22,18 @@ namespace waRESTIndustriaHuitzil.Controllers
         }
         #endregion
 
+        #region GET
+        [HttpGet("ConsultaSucursal")]
+        [Authorize(AuthenticationSchemes = Microsoft.AspNetCore.Authentication.JwtBearer.JwtBearerDefaults.AuthenticationScheme)]
+        public async Task<IActionResult> GetClientes(string sucursal)
+        {
+            return Ok(await _service.getClientesbySucursal(sucursal));
+        }
+
+
+     
+        #endregion
+
         #region POST
         [HttpPost("Agrega")]
         [Authorize(AuthenticationSchemes = Microsoft.AspNetCore.Authentication.JwtBearer.JwtBearerDefaults.AuthenticationScheme)]

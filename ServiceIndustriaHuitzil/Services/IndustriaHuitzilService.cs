@@ -335,26 +335,19 @@ namespace ServiceIndustriaHuitzil.Services
             ResponseModel response = new ResponseModel();
             try
             {
-                /*response.exito = false;
-                response.mensaje = "No se pudo hacer el apartado";
-                response.respuesta = "[]"*/
+              
 
                 Apartados newApartado = new Apartados();
-                //newApartado.idArticulo = request.idArticulo;
                 newApartado.IdCliente = request.IdCliente;
                 newApartado.total = request.total;
-                newApartado.resto = request.resto;
+                newApartado.resto = request.total;
                 newApartado.ubicacion = request.ubicacion;
-                //newApartado.Telefono = request.Telefono;
-                //newApartado.IdTalla = request.IdTalla;
-              //  newApartado.idParent = request.idParent;
                 newApartado.Fecha = (DateTime)request.Fecha;
-                //newApartado.Direccion = request.Direccion;
+               
                 newApartado.Status = "Espera";
                 newApartado.Type = request.type;
 
-                //
-                //int idMovimiento = newMovimiento.IdMovimiento; // recuperar
+               
                 _ctx.Apartados.Add(newApartado);
                 await _ctx.SaveChangesAsync();
                 int idApartado = newApartado.IdApartado;
@@ -368,21 +361,19 @@ namespace ServiceIndustriaHuitzil.Services
 
                         listApartadosArticulos.Add(new ApartadoArticulo()
                         {
-                            // IdVentaArticulo = 1,
-                            //IdVenta = idVenta,
+                          
                             IdApartado = idApartado,
                             IdArticulo = dataArticulo.IdArticulo,
                             Cantidad = dataArticulo.Cantidad,
                             PrecioUnitario = dataArticulo.PrecioUnitario,
                             Subtotal = dataArticulo.Subtotal,
-                            // Articulo  = dataArticulo.Articulo
-
+                          
 
                         });
 
 
                         //Actualiza el stock
-                       /* Articulo articuloVenta = _ctx.Articulos.FirstOrDefault(x => x.IdArticulo == dataArticulo.IdArticulo);
+                       Articulo articuloVenta = _ctx.Articulos.FirstOrDefault(x => x.IdArticulo == dataArticulo.IdArticulo);
 
 
                         if ((Int32.Parse(articuloVenta.Existencia) - dataArticulo.Cantidad) >= 0)
@@ -397,14 +388,13 @@ namespace ServiceIndustriaHuitzil.Services
                             dbContextTransaction.Rollback();
                         }
 
-                        _ctx.Articulos.Update(articuloVenta);*/
+                        _ctx.Articulos.Update(articuloVenta);
 
 
                     });
                     if (listApartadosArticulos.Count() > 0)
                     {
                         _ctx.ApartadoArticulos.AddRange(listApartadosArticulos);
-                        //_ctx.ApartadoArticulos.AddRange(listApartadosArticulos);
                         await _ctx.SaveChangesAsync();
                     }
 
@@ -442,19 +432,10 @@ namespace ServiceIndustriaHuitzil.Services
 
                 if (existeApartado != null)
                 {
-                    //existeApartado.idArticulo = request.idArticulo;
-                    //existeApartado.IdEmpleado = request.IdEmpleado;
-                    //existeApartado.IdTalla = request.IdTalla;
                     existeApartado.Fecha = (DateTime)request.Fecha;
                     existeApartado.FechaEntrega = (DateTime?)request.FechaEntrega;       
                     existeApartado.Status = request.Status;
                     existeApartado.resto = request.resto;
-                    /* existeCliente.Nombre = request.Nombre;
-                     existeCliente.ApellidoPaterno = request.ApellidoPaterno;
-                     existeCliente.ApellidoMaterno = request.ApellidoMaterno;
-                     existeCliente.Telefono1 = request.Telefono1;
-                     existeCliente.Telefono2 = request.Telefono2;
-                     existeCliente.Direccion = request.Direccion;*/
                     _ctx.Apartados.Update(existeApartado);
                     await _ctx.SaveChangesAsync();
 

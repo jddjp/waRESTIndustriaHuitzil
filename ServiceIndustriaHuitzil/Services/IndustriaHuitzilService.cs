@@ -406,7 +406,7 @@ namespace ServiceIndustriaHuitzil.Services
 
                 response.exito = true;
                 response.mensaje = "Apartado realizado correctamente!!";
-                response.respuesta = "[]";
+                response.respuesta = idApartado;
             }
             catch (Exception e)
             {

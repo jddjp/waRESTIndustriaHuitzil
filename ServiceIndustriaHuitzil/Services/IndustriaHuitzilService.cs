@@ -388,7 +388,7 @@ namespace ServiceIndustriaHuitzil.Services
                             response.exito = false;
                             response.mensaje = "Ya no hay stock del articulo !";
                             response.respuesta = "[]";
-                            dbContextTransaction.Rollback();
+                           // dbContextTransaction.Rollback();
                         }
 
                         _ctx.Articulos.Update(articuloVenta);

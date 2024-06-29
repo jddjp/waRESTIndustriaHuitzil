@@ -42,12 +42,15 @@ namespace ServiceIndustriaHuitzil.Services
             respuesta.respuesta = "[]";
             try 
             {
-                User existeUsuario = _ctx.Users.Where(x => x.Usuario == authRequest.usuario && x.Password == authRequest.contrasena)
-                                                .Include(u => u.IdRolNavigation)
-                                                .IgnoreAutoIncludes()
-                                                .FirstOrDefault();
+                User existeUsuario = _ctx.Users
+             .Where(x => x.Usuario == authRequest.usuario && x.Password == authRequest.contrasena)
+             .Include(u => u.IdRolNavigation) // Incluye la navegación a IdRolNavigation
+             .Include(u => u.UbicacionNavigation) // Incluye la navegación a UbicacionNavigation
+             .IgnoreAutoIncludes()
+             .FirstOrDefault();
 
-               if (existeUsuario != null)
+
+                if (existeUsuario != null)
                {
                     List<VistasResponse> vistasU = _ctx.VistasRols.Include(a => a.IdVistaNavigation).Where(x => x.IdRol == existeUsuario.IdRol && x.IdVistaNavigation.Visible == true)
                                                             .OrderBy(y => y.IdVistaNavigation.Posicion).ToList().ConvertAll<VistasResponse>(v => new VistasResponse
@@ -84,7 +87,7 @@ namespace ServiceIndustriaHuitzil.Services
                     dataLogin.pc = existeUsuario.pc;
                     dataLogin.ubicacion = existeUsuario.ubicacion;
                     dataLogin.impresora = existeUsuario.impresora;
-
+                    dataLogin.UbicacionNavigation? = existeUsuario.UbicacionNavigation;
                     respuesta.exito = true;
                     respuesta.mensaje = "Credenciales correctas!!";
                     respuesta.respuesta = dataLogin;

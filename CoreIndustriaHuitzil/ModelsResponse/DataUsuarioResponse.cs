@@ -1,4 +1,5 @@
-﻿using System;
+﻿using CoreIndustriaHuitzil.Models;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -21,11 +22,15 @@ namespace CoreIndustriaHuitzil.ModelsResponse
         public DateTime expiredTime { get; set; }
 
         public string pc { get; set; } = string.Empty;
+
+        public int? UbicacionId { get; set; }
         public string ubicacion { get; set; } = string.Empty;
         public string impresora { get; set; } = string.Empty;
 
         public int idRol { get; set; }
         public string rol { get; set; } = string.Empty;
+
+        public CatUbicacione UbicacionNavigation { get; set; }
         public List<VistasResponse> vistas { get; set; }
     }
 }

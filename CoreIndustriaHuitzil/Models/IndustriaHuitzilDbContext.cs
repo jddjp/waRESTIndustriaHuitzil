@@ -754,6 +754,7 @@ namespace CoreIndustriaHuitzil.Models
                  .IsUnicode(false)
                  .HasColumnName("ubicacion");
 
+                entity.Property(e => e.IdUbicacion).HasColumnName("id_ubicacion");
 
                 entity.Property(e => e.impresora)
                  .HasMaxLength(50)
@@ -764,6 +765,12 @@ namespace CoreIndustriaHuitzil.Models
                     .WithMany(p => p.Users)
                     .HasForeignKey(d => d.IdRol)
                     .HasConstraintName("FK_Users_Rol");
+               
+
+                //entity.HasOne(e => e.IdUbicacionNavigation) // Agrega la relación con CatUbicaciones
+                //    .WithMany() // Si CatUbicaciones no tiene navegación inversa a Users
+                //    .HasForeignKey(e => e.IdUbicacion) // Define la clave foránea
+                //    .HasConstraintName("FK_Users_CatUbicaciones");
             });
 
             modelBuilder.Entity<Venta>(entity =>

@@ -30,7 +30,7 @@ namespace CoreIndustriaHuitzil.ModelsResponse
         public int idRol { get; set; }
         public string rol { get; set; } = string.Empty;
 
-        public CatUbicacione UbicacionNavigation { get; set; }
+        public CatUbicacione ubicacioninfo { get; set; }
         public List<VistasResponse> vistas { get; set; }
     }
 }

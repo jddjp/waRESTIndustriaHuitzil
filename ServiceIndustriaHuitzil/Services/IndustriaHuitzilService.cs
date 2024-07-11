@@ -45,11 +45,10 @@ namespace ServiceIndustriaHuitzil.Services
                 User existeUsuario = _ctx.Users
              .Where(x => x.Usuario == authRequest.usuario && x.Password == authRequest.contrasena)
              .Include(u => u.IdRolNavigation) // Incluye la navegación a IdRolNavigation
-             .Include(u => u.UbicacionNavigation) // Incluye la navegación a UbicacionNavigation
              .IgnoreAutoIncludes()
              .FirstOrDefault();
 
-
+                CatUbicacione existeUbicacion = _ctx.CatUbicaciones.FirstOrDefault(x => x.IdUbicacion == existeUsuario.IdUbicacion);
                 if (existeUsuario != null)
                {
                     List<VistasResponse> vistasU = _ctx.VistasRols.Include(a => a.IdVistaNavigation).Where(x => x.IdRol == existeUsuario.IdRol && x.IdVistaNavigation.Visible == true)
@@ -87,7 +86,7 @@ namespace ServiceIndustriaHuitzil.Services
                     dataLogin.pc = existeUsuario.pc;
                     dataLogin.ubicacion = existeUsuario.ubicacion;
                     dataLogin.impresora = existeUsuario.impresora;
-                    dataLogin.UbicacionNavigation? = existeUsuario.UbicacionNavigation;
+                    dataLogin.ubicacioninfo = existeUbicacion;
                     respuesta.exito = true;
                     respuesta.mensaje = "Credenciales correctas!!";
                     respuesta.respuesta = dataLogin;
@@ -3624,6 +3623,7 @@ namespace ServiceIndustriaHuitzil.Services
                     existeUser.IdRol = request.IdRol;
                     existeUser.pc = request.pc;
                     existeUser.ubicacion = request.direccion;
+                    existeUser.impresora = request.impresora;
                     _ctx.Users.Update(existeUser);
                     await _ctx.SaveChangesAsync();
 

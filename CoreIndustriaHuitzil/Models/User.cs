@@ -29,11 +29,10 @@ namespace CoreIndustriaHuitzil.Models
         public string? ubicacion { get; set; }
         public string? impresora { get; set; }
 
-        public int? ubicacionId { get; set; }
+        public int? IdUbicacion { get; set; }
         public DateTime? ExpiredTime { get; set; }
-
-        public virtual CatUbicacione? UbicacionNavigation { get; set; } // Agrega la navegación
         public virtual Rol? IdRolNavigation { get; set; }
+
         public virtual ICollection<Caja> Cajas { get; set; }
         public virtual ICollection<SolicitudesMateriale> SolicitudesMateriales { get; set; }
         public virtual ICollection<MovimientosInventario> MovimientosInventariosEnvio { get; set; }

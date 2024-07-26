@@ -57,11 +57,11 @@ namespace waRESTIndustriaHuitzil.Controllers
         #endregion
 
         #region DELETE
-        [HttpDelete("EliminaCategoria")]
+        [HttpDelete("EliminaPago")]
         [Authorize(AuthenticationSchemes = Microsoft.AspNetCore.Authentication.JwtBearer.JwtBearerDefaults.AuthenticationScheme)]
-        public async Task<IActionResult> EliminaUbicacion([FromBody] CategoriaRequest request)
+        public async Task<IActionResult> EliminaPagoApartado([FromBody] PagoApartadoRequest request)
         {
-            return Ok(await _service.deleteCategoria(request));
+            return Ok(await _service.deletePagoApartado(request));
         }
         #endregion
     }

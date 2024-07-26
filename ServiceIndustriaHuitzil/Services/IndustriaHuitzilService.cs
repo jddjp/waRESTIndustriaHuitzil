@@ -1982,7 +1982,7 @@ namespace ServiceIndustriaHuitzil.Services
 
                 PagoApartado newPago = new PagoApartado();
                 newPago.IdApartado = request.IdApartado;
-                newPago.Fecha = request.Fecha;
+                newPago.Fecha = (DateTime)request.Fecha;
                 newPago.Cantidad = request.Cantidad;
                 newPago.IdCaja = request.IdCaja;
                 newPago.Tarjeta= request.MontoTarjeta;
@@ -2006,6 +2006,37 @@ namespace ServiceIndustriaHuitzil.Services
             return response;
         }
 
+        public async Task<ResponseModel> deletePagoApartado(PagoApartadoRequest request)
+        {
+            ResponseModel response = new ResponseModel();
+            try
+            {
+                response.exito = false;
+                response.mensaje = "No se pudo eliminar el pago";
+                response.respuesta = "[]";
+
+                CatCategoria existeCategoria = _ctx.CatCategorias.FirstOrDefault(x => x.IdCategoria == request.IdPagoApartado);
+
+                if (existeCategoria != null)
+                {
+
+                    _ctx.Remove(existeCategoria);
+                    await _ctx.SaveChangesAsync();
+
+                    response.exito = true;
+                    response.mensaje = "Se eliminó correctamente la Categoria!!";
+                    response.respuesta = "[]";
+                }
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e.Message);
+                response.mensaje = e.Message;
+                response.exito = false;
+                response.respuesta = "[]";
+            }
+            return response;
+        }
 
         #endregion
         #region Proveedores

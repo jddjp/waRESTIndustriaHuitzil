@@ -462,21 +462,20 @@ namespace ServiceIndustriaHuitzil.Services
             try
             {
                 response.exito = false;
-                response.mensaje = "No se pudo eliminar el proveedor";
+                response.mensaje = "No se pudo eliminar el Apartado";
                 response.respuesta = "[]";
 
-                //CatCliente existeCliente = _ctx.CatClientes.FirstOrDefault(x => x.IdCliente == request.IdCliente);
+                Apartados existeApartado = _ctx.Apartados.FirstOrDefault(x => x.IdApartado == request.IdApartado);
 
-                /*if (existeCliente != null)
+                if (existeApartado != null)
                 {
-                    existeCliente.Visible = false;
-                    _ctx.CatClientes.Update(existeCliente);
+                   
                     await _ctx.SaveChangesAsync();
 
                     response.exito = true;
                     response.mensaje = "Se eliminó el cliente correctamente!!";
                     response.respuesta = "[]";
-                }*/
+                }
             }
             catch (Exception e)
             {

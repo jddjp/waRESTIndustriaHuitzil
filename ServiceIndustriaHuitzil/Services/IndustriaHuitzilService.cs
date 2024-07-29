@@ -2014,19 +2014,49 @@ namespace ServiceIndustriaHuitzil.Services
                 response.mensaje = "No se pudo eliminar el pago";
                 response.respuesta = "[]";
 
-                CatCategoria existeCategoria = _ctx.CatCategorias.FirstOrDefault(x => x.IdCategoria == request.IdPagoApartado);
-
-                if (existeCategoria != null)
+                PagoApartado existe = _ctx.PagoApartados.FirstOrDefault(x => x.IdPagoApartado == request.IdPagoApartado);
+                Apartados existeApartado= _ctx.Apartados.FirstOrDefault(x => x.IdApartado == request.IdApartado);
+                if (existe != null && existeApartado != null)
                 {
+                    using (var transaction = _ctx.Database.BeginTransaction())
+                    {
+                        try
+                        {
+                            // Actualizar la cantidad en el Apartado
+                            existeApartado.resto += existe.Cantidad;
 
-                    _ctx.Remove(existeCategoria);
-                    await _ctx.SaveChangesAsync();
+                            // Eliminar el PagoApartado
+                            _ctx.Remove(existe);
 
-                    response.exito = true;
-                    response.mensaje = "Se eliminó correctamente la Categoria!!";
-                    response.respuesta = "[]";
+                            // Guardar cambios
+                            await _ctx.SaveChangesAsync();
+
+                            // Confirmar la transacción
+                            transaction.Commit();
+
+                            response.exito = true;
+                            response.mensaje = "Se eliminó correctamente el Pago y se actualizó el Apartado!!";
+                            response.respuesta = "[]";
+                        }
+                        catch (Exception innerEx)
+                  
+                           
+                        {
+                            // Rollback de la transacción
+                            transaction.Rollback();
+                            Console.WriteLine(innerEx.Message);
+                            response.mensaje = innerEx.Message;
+                            response.exito = false;
+                            response.respuesta = "[]";
+                        }
+                    }
+                }
+                else
+                {
+                    response.mensaje = "Pago o Apartado no encontrado";
                 }
             }
+
             catch (Exception e)
             {
                 Console.WriteLine(e.Message);

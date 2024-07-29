@@ -12,8 +12,8 @@ namespace CoreIndustriaHuitzil.ModelsRequest
             public int IdApartado { get; set; }
             public int? IdCliente { get; set; }
             //public int? idParent { get; set; }
-            public int? total { get; set; }
-            public int? resto { get; set; }
+            public decimal? total { get; set; }
+            public decimal? resto { get; set; }
             public DateTime Fecha { get; set; }
             public DateTime? FechaEntrega { get; set; }
             public string? Status { get; set; }

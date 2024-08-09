@@ -65,7 +65,7 @@ namespace waRESTIndustriaHuitzil.Controllers
         #endregion
 
         #region DELETE
-        [HttpDelete("EliminaApartado")]
+        [HttpDelete("CancelaApartado")]
         [Authorize(AuthenticationSchemes = Microsoft.AspNetCore.Authentication.JwtBearer.JwtBearerDefaults.AuthenticationScheme)]
         public async Task<IActionResult> EliminaApartado([FromBody] ApartadosRequest request)
         {

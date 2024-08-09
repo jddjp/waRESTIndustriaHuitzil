@@ -26,8 +26,8 @@ namespace ServiceIndustriaHuitzil.Services
 
         #endregion
         #region Caja
-        Task<ResponseModel> getCajaDate();
-        Task<ResponseModel> getCajaDate(DateTime dateI, DateTime dateF);
+        Task<ResponseModel> getCajaDate(string sucursal);
+        Task<ResponseModel> getCajaDate(DateTime dateI, DateTime dateF, string sucursal);
         Task<ResponseModel> getCaja(int idUser);
         Task<ResponseModel> openCaja(CajaRequest request);
         Task<ResponseModel> closeCaja(CajaRequest request);

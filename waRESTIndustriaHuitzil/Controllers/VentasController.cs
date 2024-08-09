@@ -16,16 +16,16 @@ namespace waRESTIndustriaHuitzil.Controllers
         #region Caja
         [HttpGet("Cash/Cajas")]
         [Authorize(AuthenticationSchemes = Microsoft.AspNetCore.Authentication.JwtBearer.JwtBearerDefaults.AuthenticationScheme)]
-        public async Task<IActionResult> GetCaja()
+        public async Task<IActionResult> GetCaja(string sucursal)
         {
-            return Ok(await _service.getCajaDate());
+            return Ok(await _service.getCajaDate(sucursal));
         }
 
         [HttpGet("Cash/CajasDate")]
         [Authorize(AuthenticationSchemes = Microsoft.AspNetCore.Authentication.JwtBearer.JwtBearerDefaults.AuthenticationScheme)]
-        public async Task<IActionResult> GetCaja(DateTime dateI, DateTime dateF)
+        public async Task<IActionResult> GetCaja(DateTime dateI, DateTime dateF, string sucursal)
         {
-            return Ok(await _service.getCajaDate(dateI,dateF));
+            return Ok(await _service.getCajaDate(dateI,dateF, sucursal));
         }
        
     [HttpGet("Cash/Consulta")]

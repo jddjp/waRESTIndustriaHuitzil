@@ -11,7 +11,6 @@ namespace CoreIndustriaHuitzil.ModelsRequest
         {
             public int IdApartado { get; set; }
             public int? IdCliente { get; set; }
-            //public int? idParent { get; set; }
             public decimal? total { get; set; }
             public decimal? resto { get; set; }
             public DateTime Fecha { get; set; }
@@ -20,8 +19,7 @@ namespace CoreIndustriaHuitzil.ModelsRequest
             public string? type { get;  set; }
             public string? cliente { get; set;}
             public string? ubicacion { get; set; }
-
-        public string? telefono1 { get; set; }
+            public string? telefono1 { get; set; }
         
         public List<ApartadoArticuloRequest> articulosApartados { get; set; } = new List<ApartadoArticuloRequest>();
     }

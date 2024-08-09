@@ -337,15 +337,12 @@ namespace ServiceIndustriaHuitzil.Services
             ResponseModel response = new ResponseModel();
             try
             {
-              
-
                 Apartados newApartado = new Apartados();
                 newApartado.IdCliente = request.IdCliente;
                 newApartado.total = request.total;
                 newApartado.resto = request.total;
                 newApartado.ubicacion = request.ubicacion;
                 newApartado.Fecha = (DateTime)request.Fecha;
-               
                 newApartado.Status = "Espera";
                 newApartado.Type = request.type;
 
@@ -387,7 +384,6 @@ namespace ServiceIndustriaHuitzil.Services
                             response.exito = false;
                             response.mensaje = "Ya no hay stock del articulo !";
                             response.respuesta = "[]";
-                           // dbContextTransaction.Rollback();
                         }
 
                         _ctx.Articulos.Update(articuloVenta);
@@ -430,7 +426,7 @@ namespace ServiceIndustriaHuitzil.Services
                 response.respuesta = "[]";
 
                 Apartados existeApartado = _ctx.Apartados.FirstOrDefault(x => x.IdApartado == request.IdApartado);
-                //CatCliente existeCliente = _ctx.CatClientes.FirstOrDefault(x => x.IdCliente == request.IdApartado);
+                
 
                 if (existeApartado != null)
                 {
@@ -461,21 +457,49 @@ namespace ServiceIndustriaHuitzil.Services
             ResponseModel response = new ResponseModel();
             try
             {
-                response.exito = false;
-                response.mensaje = "No se pudo eliminar el Apartado";
-                response.respuesta = "[]";
+                // Buscar el apartado existente
+                Apartados apartado = _ctx.Apartados.FirstOrDefault(a => a.IdApartado == request.IdApartado);
 
-                Apartados existeApartado = _ctx.Apartados.FirstOrDefault(x => x.IdApartado == request.IdApartado);
-
-                if (existeApartado != null)
+                if (apartado == null)
                 {
-                   
-                    await _ctx.SaveChangesAsync();
-
-                    response.exito = true;
-                    response.mensaje = "Se eliminó el cliente correctamente!!";
+                    response.exito = false;
+                    response.mensaje = "Apartado no encontrado!";
                     response.respuesta = "[]";
+                    return response;
                 }
+
+                // Verificar si el apartado ya está cancelado
+                if (apartado.Status == "CANCELADO")
+                {
+                    response.exito = false;
+                    response.mensaje = "El apartado ya está cancelado!";
+                    response.respuesta = "[]";
+                    return response;
+                }
+
+                // Cambiar el estado del apartado a "CANCELADO"
+                apartado.Status = "CANCELADO";
+                _ctx.Apartados.Update(apartado);
+
+                // Devolver la cantidad de artículos al stock
+                List<ApartadoArticulo> listApartadosArticulos = _ctx.ApartadoArticulos.Where(aa => aa.IdApartado == request.IdApartado).ToList();
+
+                foreach (var dataArticulo in listApartadosArticulos)
+                {
+                    Articulo articuloVenta = _ctx.Articulos.FirstOrDefault(x => x.IdArticulo == dataArticulo.IdArticulo);
+
+                    if (articuloVenta != null)
+                    {
+                        articuloVenta.Existencia = (Int32.Parse(articuloVenta.Existencia) + dataArticulo.Cantidad).ToString();
+                        _ctx.Articulos.Update(articuloVenta);
+                    }
+                }
+
+                await _ctx.SaveChangesAsync();
+
+                response.exito = true;
+                response.mensaje = "Apartado cancelado y stock actualizado correctamente!!";
+                response.respuesta = "[]";
             }
             catch (Exception e)
             {
@@ -490,7 +514,7 @@ namespace ServiceIndustriaHuitzil.Services
         #endregion
 
         #region Caja
-        public async Task<ResponseModel> getCajaDate()
+        public async Task<ResponseModel> getCajaDate(string sucursal)
         {
             ResponseModel response = new ResponseModel();
             try
@@ -498,7 +522,18 @@ namespace ServiceIndustriaHuitzil.Services
                 response.exito = false;
                 response.mensaje = "No hay una caja para mostrar";
                 response.respuesta = "[]";
-                List<Caja> cajas = await _ctx.Cajas.Include(c => c.IdEmpleadoNavigation).OrderByDescending(x => x.Fecha).ToListAsync();
+                List<Caja> cajas = new List<Caja>();
+                if (sucursal == "all") {
+                  cajas = await _ctx.Cajas.Include(c => c.IdEmpleadoNavigation)
+                        .Include(c => c.Venta)
+                       .OrderByDescending(x => x.Fecha).ToListAsync();
+                } else {
+                    cajas = await _ctx.Cajas.Include(c => c.IdEmpleadoNavigation)
+                           .Include(c => c.Venta)
+                        .Where(c => c.IdEmpleadoNavigation.ubicacion == sucursal) 
+                        .OrderByDescending(x => x.Fecha).ToListAsync();
+                }
+               
                 if (cajas != null)
                 {
                     response.exito = true;
@@ -517,7 +552,7 @@ namespace ServiceIndustriaHuitzil.Services
             return response;
         }
 
-        public async Task<ResponseModel> getCajaDate(DateTime dateI, DateTime dateF)
+        public async Task<ResponseModel> getCajaDate(DateTime dateI, DateTime dateF,string sucursal )
         {
             ResponseModel response = new ResponseModel();
             try
@@ -525,7 +560,23 @@ namespace ServiceIndustriaHuitzil.Services
                 response.exito = false;
                 response.mensaje = "No hay una caja para mostrar";
                 response.respuesta = "[]";
-                List<Caja> cajas = await _ctx.Cajas.Where(x => x.Fecha >= dateI && x.Fecha <= dateF).Include(c => c.IdEmpleadoNavigation).OrderByDescending(x => x.Fecha).ToListAsync();
+                List<Caja> cajas = new List<Caja>();
+                if (sucursal == "all")
+                {
+                    cajas = await _ctx.Cajas.Include(c => c.IdEmpleadoNavigation)
+                          .Include(c => c.Venta)
+                           .Where(x => x.Fecha >= dateI && x.Fecha <= dateF)
+                         .OrderByDescending(x => x.Fecha).ToListAsync();
+                }
+                else
+                {
+                    cajas = await _ctx.Cajas.Include(c => c.IdEmpleadoNavigation)
+                           .Include(c => c.Venta)
+                          . Where(x => x.Fecha >= dateI && x.Fecha <= dateF)
+                        .Where(c => c.IdEmpleadoNavigation.ubicacion == sucursal)
+                        .OrderByDescending(x => x.Fecha).ToListAsync();
+                }
+                //List<Caja> cajas = await _ctx.Cajas.Where(x => x.Fecha >= dateI && x.Fecha <= dateF).Include(c => c.IdEmpleadoNavigation).OrderByDescending(x => x.Fecha).ToListAsync();
                 if (cajas != null)
                 {
                     response.exito = true;
@@ -1045,7 +1096,7 @@ namespace ServiceIndustriaHuitzil.Services
                 response.respuesta = "[]";
 
                 CatCliente newCliente = new CatCliente();
-                newCliente.Nombre = request.Nombre;
+                newCliente.Nombre = request.Nombre.ToUpper();
                 newCliente.ApellidoPaterno = request.ApellidoPaterno;
                 newCliente.ApellidoMaterno = request.ApellidoMaterno;
                 newCliente.Telefono1 = request.Telefono1;

@@ -29,6 +29,14 @@ namespace waRESTIndustriaHuitzil.Controllers
         {
             return Ok(await _service.postRol(request));
         }
+
+        [HttpPost("Correo")]
+        //[Authorize(AuthenticationSchemes = Microsoft.AspNetCore.Authentication.JwtBearer.JwtBearerDefaults.AuthenticationScheme)]
+        public async Task<IActionResult> Correo([FromBody] CorreoRequest request)
+        {
+            return Ok(await _service.correo(request));
+        }
+
         #endregion
 
         #region PUT

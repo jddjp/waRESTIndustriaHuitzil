@@ -3054,10 +3054,15 @@ namespace ServiceIndustriaHuitzil.Services
             return response;
         }
 
-        private readonly string _smtpServer = "smtp.gmail.com"; // Cambia esto por tu servidor SMTP
-        private readonly int _smtpPort = 587; // Puerto del servidor SMTP (puede ser 465, 587, etc.)
-        private readonly string _smtpUsername = "notificacionesn00@gmail.com"; // Cambia esto por tu nombre de usuario SMTP
-        private readonly string _smtpPassword = "xzns ibeg dfpy hpyp"; // Cambia esto por tu contraseña SMTP
+       // private readonly string _smtpServer = "smtp.gmail.com"; // Cambia esto por tu servidor SMTP
+      //  private readonly int _smtpPort = 587; // Puerto del servidor SMTP (puede ser 465, 587, etc.)
+        //private readonly string _smtpUsername = "notificacionesn00@gmail.com"; // Cambia esto por tu nombre de usuario SMTP
+        //private readonly string _smtpPassword = "xzns ibeg dfpy hpyp"; // Cambia esto por tu contraseña SMTP
+
+        private readonly string _smtpServer = "bh8946.banahosting.com"; // Cambia esto por tu servidor SMTP
+        private readonly int _smtpPort = 465; // Puerto del servidor SMTP (puede ser 465, 587, etc.)
+        private readonly string _smtpUsername = "correo@reedlatino.com"; // Cambia esto por tu nombre de usuario SMTP
+        private readonly string _smtpPassword = "Septiembre2024!"; // Cambia esto por tu contraseña SMTP
 
         public async Task<ResponseModel> correo(CorreoRequest correo)
         {
@@ -3084,7 +3089,7 @@ namespace ServiceIndustriaHuitzil.Services
 
             SmtpClient clienteSmtp = new();
             clienteSmtp.CheckCertificateRevocation = false;
-            clienteSmtp.Connect(_smtpServer, _smtpPort, MailKit.Security.SecureSocketOptions.StartTls);
+            clienteSmtp.Connect(_smtpServer, _smtpPort, MailKit.Security.SecureSocketOptions.SslOnConnect);
             clienteSmtp.Authenticate(_smtpUsername, _smtpPassword);
             clienteSmtp.Send(emailMessage);
 

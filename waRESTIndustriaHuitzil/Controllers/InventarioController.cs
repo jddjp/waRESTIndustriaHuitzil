@@ -28,6 +28,28 @@ namespace waRESTIndustriaHuitzil.Controllers
             return Ok(await _service.searchProduct(queryString, sucursal));
         }
 
+        [HttpGet("SearchProductDemanda")]
+        [Authorize(AuthenticationSchemes = Microsoft.AspNetCore.Authentication.JwtBearer.JwtBearerDefaults.AuthenticationScheme)]
+        public async Task<IActionResult> SearchProductDemanda(string queryString, string sucursal, int page = 0, int size = 10, string sku = null, string categoria = null, string talla = null, string ubicacion = null)
+        {
+            var filters = new SearchProductFilters
+            {
+                //QueryString = queryString,
+                //Sucursal = sucursal,
+                //SKU = sku,
+                //Descripcion = descripcion,
+                Categoria = categoria,
+                Talla = talla,
+                Ubicacion = ubicacion,
+                Page = page,
+                Size = size
+            };
+
+            var result = await _service.SearchProductDemanda(filters);
+
+            return Ok(result);
+        }
+
 
 
         [HttpGet("SearchProductFilterUbicacion")]

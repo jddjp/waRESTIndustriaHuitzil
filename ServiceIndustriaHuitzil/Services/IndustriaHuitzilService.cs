@@ -2649,6 +2649,114 @@ namespace ServiceIndustriaHuitzil.Services
             return response;
         }
 
+        public async Task<ResponseModel> SearchProductDemanda(SearchProductFilters filters)
+        {
+            ResponseModel response = new ResponseModel();
+            try
+            {
+                response.exito = false;
+                response.mensaje = "No hay productos relacionados con la búsqueda";
+                response.respuesta = "[]";
+
+                // Lista para almacenar los resultados finales
+                List<ProductoRequest> allResults = new List<ProductoRequest>();
+
+                // Construir la consulta base
+                var query = _ctx.Articulos
+                                .Include(a => a.IdTallaNavigation)
+                                .Include(b => b.IdCategoriaNavigation)
+                                .Include(c => c.IdUbicacionNavigation)
+                                .AsQueryable();
+
+                // Aplicar el filtro por sucursal si es diferente de "all"
+                //if (!string.IsNullOrEmpty(filters.Sucursal) && filters.Sucursal != "all")
+                //{
+                //    query = query.Where(x => x.IdUbicacionNavigation.Direccion == filters.Sucursal);
+                //}
+
+                // Aplicar el filtro por descripción o queryString si no está vacío
+                if (!string.IsNullOrEmpty(filters.QueryString))
+                {
+                    query = query.Where(x => x.Descripcion.ToLower().Contains(filters.QueryString.ToLower()));
+                }
+
+                // Aplicar el filtro por SKU si no está vacío
+                if (!string.IsNullOrEmpty(filters.SKU))
+                {
+                    query = query.Where(x => x.Sku.ToLower().Contains(filters.SKU.ToLower()));
+                }
+
+                // Aplicar el filtro por talla si no está vacío
+                if (!string.IsNullOrEmpty(filters.Talla))
+                {
+                    int tallaId;
+                    if (int.TryParse(filters.Talla, out tallaId)) // Convertir la talla en entero
+                    {
+                        query = query.Where(x => x.IdTalla == tallaId); // Filtrar por ID de talla
+                    }
+                }
+
+                if (!string.IsNullOrEmpty(filters.Categoria))
+                {
+                    int categoriaId;
+                    if (int.TryParse(filters.Categoria, out categoriaId)) // Convertir la categoría en entero
+                    {
+                        query = query.Where(x => x.IdCategoria == categoriaId); // Filtrar por ID de categoría
+                    }
+                }
+
+
+                // Aplicar el filtro por ubicación si no está vacío
+                // Filtro por ubicación (asegurarse de que sea un número)
+                if (!string.IsNullOrEmpty(filters.Ubicacion))
+                {
+                 
+                        query = query.Where(x => x.IdUbicacionNavigation.Direccion == filters.Ubicacion); // Filtrar por ID de ubicación
+                  
+                }
+
+                // Aplicar paginación
+                int skip = filters.Page * filters.Size;
+                query = query.Skip(skip).Take(filters.Size);
+
+                // Ejecutar la consulta
+                var results = await query.ToListAsync();
+
+                // Verificar si hay resultados y mapearlos a la lista de productos
+                if (results.Any())
+                {
+                    allResults = results.Select(product => new ProductoRequest()
+                    {
+                        IdArticulo = product.IdArticulo,
+                        Status = product.Status,
+                        Existencia = product.Existencia,
+                        Descripcion = product.Descripcion,
+                        FechaIngreso = (DateTime)product.FechaIngreso,
+                        idTalla = (int)product.IdTalla,
+                        idCategoria = (int)product.IdCategoria,
+                        idUbicacion = (int)product.IdUbicacion,
+                        imagen = product.Imagen,
+                        talla = product.IdTallaNavigation.Nombre,
+                        ubicacion = product.IdUbicacionNavigation.Direccion,
+                        categoria = product.IdCategoriaNavigation.Descripcion,
+                        precio = (decimal)product.Precio,
+                        sku = product.Sku
+                    }).ToList();
+
+                    response.exito = true;
+                    response.mensaje = "Se obtuvieron las coincidencias relacionadas con el filtro";
+                    response.respuesta = allResults;
+                }
+            }
+            catch (Exception e)
+            {
+                response.mensaje = e.Message;
+                response.exito = false;
+                response.respuesta = "[]";
+            }
+            return response;
+        }
+
 
         public async Task<ResponseModel> SearchProductFilterUbicacion( string sucursal)
         {
@@ -4244,7 +4352,7 @@ namespace ServiceIndustriaHuitzil.Services
 
                 List<VentaRequest> listaVentas = new List<VentaRequest>();
                 List<Venta> lista = _ctx.Ventas.ToList();
-                List < VentaArticulo> articulosVendidos= new List<VentaArticulo>();
+              //  List < VentaArticulo> articulosVendidos= new List<VentaArticulo>();
                 if (lista != null)
                 {
                     response.exito = true;

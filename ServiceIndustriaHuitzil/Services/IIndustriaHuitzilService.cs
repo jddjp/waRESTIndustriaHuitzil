@@ -92,6 +92,8 @@ namespace ServiceIndustriaHuitzil.Services
 
         Task<ResponseModel> searchProduct(string queryString, string sucursal);
 
+        Task<ResponseModel> SearchProductDemanda(SearchProductFilters searchProductFilters);
+        
         Task<ResponseModel> SearchProductFilterUbicacion( string sucursal);
         
         #endregion

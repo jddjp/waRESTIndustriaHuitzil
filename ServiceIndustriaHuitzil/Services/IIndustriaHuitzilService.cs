@@ -108,6 +108,7 @@ namespace ServiceIndustriaHuitzil.Services
         Task<ResponseModel> putRol(RolRequest rol);
         Task<ResponseModel> deleteRol(RolRequest rol);
         Task<ResponseModel> correo(CorreoRequest correo);
+        Task<ResponseModel> correoOrion(CorreoRequest correo);
         #endregion
 
         #region SolicitudMaterial

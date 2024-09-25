@@ -3214,6 +3214,39 @@ namespace ServiceIndustriaHuitzil.Services
             return response;
         }
 
+        private readonly string _smtpServerOrion = "smtp.gmail.com"; 
+        private readonly int _smtpPortOrion = 587;
+        private readonly string _smtpUsernameOrion = "notificacionesn00@gmail.com"; 
+        private readonly string _smtpPasswordOrion = "xzns ibeg dfpy hpyp"; 
+
+        public async Task<ResponseModel> correoOrion(CorreoRequest correo)
+        {
+            ResponseModel response = new ResponseModel();
+            response.mensaje = "";
+            response.exito = true;
+            response.respuesta = "[]";
+            var emailMessage = new MimeMessage();
+            emailMessage.From.Add(new MailboxAddress(correo.titulo, _smtpUsernameOrion));
+            emailMessage.To.Add(new MailboxAddress("", correo.correo));
+            emailMessage.Subject = correo.subject;
+            emailMessage.Body = new TextPart("plain")
+            {
+                Text = correo.mensaje
+            };
+            BodyBuilder cuerpo = new();
+            cuerpo.TextBody = "Notificacion";
+            cuerpo.HtmlBody = correo.mensaje;
+            emailMessage.Body = cuerpo.ToMessageBody();
+            SmtpClient clienteSmtp = new();
+            clienteSmtp.CheckCertificateRevocation = false;
+            clienteSmtp.Connect(_smtpServerOrion, _smtpPortOrion, MailKit.Security.SecureSocketOptions.StartTls);
+            clienteSmtp.Authenticate(_smtpUsernameOrion, _smtpPasswordOrion);
+            clienteSmtp.Send(emailMessage);
+            clienteSmtp.Disconnect(true);
+            response.exito = true;
+            return response;
+        }
+
         #endregion
 
         #region SolicitudesMateriales

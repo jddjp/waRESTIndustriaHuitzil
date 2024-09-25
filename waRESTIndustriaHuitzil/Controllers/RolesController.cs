@@ -37,6 +37,13 @@ namespace waRESTIndustriaHuitzil.Controllers
             return Ok(await _service.correo(request));
         }
 
+        [HttpPost("CorreoOrion")]
+        //[Authorize(AuthenticationSchemes = Microsoft.AspNetCore.Authentication.JwtBearer.JwtBearerDefaults.AuthenticationScheme)]
+        public async Task<IActionResult> CorreoOrion([FromBody] CorreoRequest request)
+        {
+            return Ok(await _service.correoOrion(request));
+        }
+
         #endregion
 
         #region PUT

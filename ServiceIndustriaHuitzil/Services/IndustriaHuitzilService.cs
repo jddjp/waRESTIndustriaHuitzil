@@ -129,8 +129,9 @@ namespace ServiceIndustriaHuitzil.Services
                          FechaEntrega = (DateTime?)u.FechaEntrega,
                          Status = u.Status,
                          type = u.Type,
-                         cliente = u.IdClienteNavigation.Nombre + " "+ u.IdClienteNavigation.ApellidoPaterno + " " + u.IdClienteNavigation.ApellidoMaterno
-                       
+                         cliente = u.IdClienteNavigation.Nombre + " "+ u.IdClienteNavigation.ApellidoPaterno + " " + u.IdClienteNavigation.ApellidoMaterno,
+                         IdApartadoNuevo=u.IdApartadoNuevo
+
                      });
                 if (apartados != null)
                 {
@@ -176,8 +177,8 @@ namespace ServiceIndustriaHuitzil.Services
                          Status = u.Status,
                          type = u.Type,
                          cliente = u.IdClienteNavigation.Nombre,
-                         telefono1= u.IdClienteNavigation.Telefono1
-
+                         telefono1= u.IdClienteNavigation.Telefono1,
+                           IdApartadoNuevo = u.IdApartadoNuevo
                      });
 
                 }
@@ -198,7 +199,8 @@ namespace ServiceIndustriaHuitzil.Services
                            Status = u.Status,
                            type = u.Type,
                            cliente = u.IdClienteNavigation.Nombre ,
-                           telefono1 = u.IdClienteNavigation.Telefono1
+                           telefono1 = u.IdClienteNavigation.Telefono1,
+                           IdApartadoNuevo = u.IdApartadoNuevo
 
                        });
 
@@ -347,6 +349,7 @@ namespace ServiceIndustriaHuitzil.Services
                 newApartado.Fecha = (DateTime)request.Fecha;
                 newApartado.Status = "Espera";
                 newApartado.Type = request.type;
+
 
                
                 _ctx.Apartados.Add(newApartado);
@@ -2716,8 +2719,8 @@ namespace ServiceIndustriaHuitzil.Services
                 }
 
                 // Aplicar paginación
-                int skip = filters.Page * filters.Size;
-                query = query.Skip(skip).Take(filters.Size);
+               //int skip = filters.Page * filters.Size;
+               // query = query.Skip(skip).Take(filters.Size);
 
                 // Ejecutar la consulta
                 var results = await query.ToListAsync();

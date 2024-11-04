@@ -61,6 +61,8 @@ namespace CoreIndustriaHuitzil.Models
 
                 entity.Property(e => e.IdApartado).HasColumnName("id_Apartado");
 
+                entity.Property(e => e.IdApartadoNuevo).HasColumnName("id_Apartado_nuevo");
+
                 entity.Property(e => e.IdCliente)
                     .HasMaxLength(50)
                     .HasColumnName("id_cliente")

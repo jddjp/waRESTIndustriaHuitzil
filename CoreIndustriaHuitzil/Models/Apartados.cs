@@ -20,6 +20,8 @@ namespace CoreIndustriaHuitzil.Models
         /// </summary>
         public string? Type { get; set; }
         public string? ubicacion { get; set; }
+
+        public int IdApartadoNuevo { get; set; }
         public virtual CatCliente? IdClienteNavigation { get; set; }
 
         public virtual ICollection<ApartadoArticulo> ApartadoArticulos { get; set; }

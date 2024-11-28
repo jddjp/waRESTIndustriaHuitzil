@@ -2663,7 +2663,7 @@ namespace ServiceIndustriaHuitzil.Services
 
                 // Lista para almacenar los resultados finales
                 List<ProductoRequest> allResults = new List<ProductoRequest>();
-
+              
                 // Construir la consulta base
                 var query = _ctx.Articulos
                                 .Include(a => a.IdTallaNavigation)
@@ -5067,11 +5067,19 @@ namespace ServiceIndustriaHuitzil.Services
 
 
                                 if (existeArticulo != null)
-                                {
+                                {// Asegúrate de que existeArticulo.Existencia no esté vacío ni nulo antes de parsear
+                                    int existencia = string.IsNullOrEmpty(existeArticulo.Existencia) ? 0 : Int32.Parse(existeArticulo.Existencia);
+
+                                    // Convierte CantMovimiento a entero y suma con la existencia
+                                    int resultado = existencia + Int32.Parse(dataArticulo.CantMovimiento.ToString());
+
+                                    // Asigna el resultado a existeArticulo.Existencia como cadena
+                                    existeArticulo.Existencia = resultado.ToString();
+
                                     //Sumar
-                                    int result = Int32.Parse(existeArticulo.Existencia) + Int32.Parse(dataArticulo.CantMovimiento.ToString());
+                                    //int result = Int32.Parse(existeArticulo.Existencia) + Int32.Parse(dataArticulo.CantMovimiento.ToString());
                                  
-                                    existeArticulo.Existencia = result.ToString();
+                                   // existeArticulo.Existencia = result.ToString();
 
                                     listventasArticulos.Add(existeArticulo);
 

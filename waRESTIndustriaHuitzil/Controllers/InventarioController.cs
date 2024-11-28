@@ -76,7 +76,7 @@ namespace waRESTIndustriaHuitzil.Controllers
             return Ok(await _service.postProductos(request));
         }
         [HttpPost("AgregaCarga")]
-        public async Task<IActionResult> AgregaProducto([FromBody] ProductoRequest request)
+        public async Task<IActionResult> AgregaCarga([FromBody] ProductoRequest request)
         {
             return Ok(await _service.postProductos(request));
         }

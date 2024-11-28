@@ -129,8 +129,9 @@ namespace ServiceIndustriaHuitzil.Services
                          FechaEntrega = (DateTime?)u.FechaEntrega,
                          Status = u.Status,
                          type = u.Type,
-                         cliente = u.IdClienteNavigation.Nombre + " "+ u.IdClienteNavigation.ApellidoPaterno + " " + u.IdClienteNavigation.ApellidoMaterno
-                       
+                         cliente = u.IdClienteNavigation.Nombre + " "+ u.IdClienteNavigation.ApellidoPaterno + " " + u.IdClienteNavigation.ApellidoMaterno,
+                         IdApartadoNuevo=u.IdApartadoNuevo
+
                      });
                 if (apartados != null)
                 {
@@ -176,8 +177,8 @@ namespace ServiceIndustriaHuitzil.Services
                          Status = u.Status,
                          type = u.Type,
                          cliente = u.IdClienteNavigation.Nombre,
-                         telefono1= u.IdClienteNavigation.Telefono1
-
+                         telefono1= u.IdClienteNavigation.Telefono1,
+                           IdApartadoNuevo = u.IdApartadoNuevo
                      });
 
                 }
@@ -198,7 +199,8 @@ namespace ServiceIndustriaHuitzil.Services
                            Status = u.Status,
                            type = u.Type,
                            cliente = u.IdClienteNavigation.Nombre ,
-                           telefono1 = u.IdClienteNavigation.Telefono1
+                           telefono1 = u.IdClienteNavigation.Telefono1,
+                           IdApartadoNuevo = u.IdApartadoNuevo
 
                        });
 
@@ -347,6 +349,7 @@ namespace ServiceIndustriaHuitzil.Services
                 newApartado.Fecha = (DateTime)request.Fecha;
                 newApartado.Status = "Espera";
                 newApartado.Type = request.type;
+
 
                
                 _ctx.Apartados.Add(newApartado);
@@ -2660,7 +2663,7 @@ namespace ServiceIndustriaHuitzil.Services
 
                 // Lista para almacenar los resultados finales
                 List<ProductoRequest> allResults = new List<ProductoRequest>();
-
+              
                 // Construir la consulta base
                 var query = _ctx.Articulos
                                 .Include(a => a.IdTallaNavigation)
@@ -2716,8 +2719,8 @@ namespace ServiceIndustriaHuitzil.Services
                 }
 
                 // Aplicar paginación
-                int skip = filters.Page * filters.Size;
-                query = query.Skip(skip).Take(filters.Size);
+               //int skip = filters.Page * filters.Size;
+               // query = query.Skip(skip).Take(filters.Size);
 
                 // Ejecutar la consulta
                 var results = await query.ToListAsync();
@@ -5064,11 +5067,19 @@ namespace ServiceIndustriaHuitzil.Services
 
 
                                 if (existeArticulo != null)
-                                {
+                                {// Asegúrate de que existeArticulo.Existencia no esté vacío ni nulo antes de parsear
+                                    int existencia = string.IsNullOrEmpty(existeArticulo.Existencia) ? 0 : Int32.Parse(existeArticulo.Existencia);
+
+                                    // Convierte CantMovimiento a entero y suma con la existencia
+                                    int resultado = existencia + Int32.Parse(dataArticulo.CantMovimiento.ToString());
+
+                                    // Asigna el resultado a existeArticulo.Existencia como cadena
+                                    existeArticulo.Existencia = resultado.ToString();
+
                                     //Sumar
-                                    int result = Int32.Parse(existeArticulo.Existencia) + Int32.Parse(dataArticulo.CantMovimiento.ToString());
+                                    //int result = Int32.Parse(existeArticulo.Existencia) + Int32.Parse(dataArticulo.CantMovimiento.ToString());
                                  
-                                    existeArticulo.Existencia = result.ToString();
+                                   // existeArticulo.Existencia = result.ToString();
 
                                     listventasArticulos.Add(existeArticulo);
 

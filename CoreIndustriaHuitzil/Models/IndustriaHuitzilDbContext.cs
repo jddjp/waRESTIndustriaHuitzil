@@ -24,7 +24,7 @@ namespace CoreIndustriaHuitzil.Models
         public virtual DbSet<CatCategoria> CatCategorias { get; set; } = null!;
         public virtual DbSet<CatCliente> CatClientes { get; set; } = null!;
         public virtual DbSet<CatProveedore> CatProveedores { get; set; } = null!;
-        public virtual DbSet<CatTalla> CatTallas { get; set; } = null!;
+     
         public virtual DbSet<CatUbicacione> CatUbicaciones { get; set; } = null!;
         public virtual DbSet<Materiale> Materiales { get; set; } = null!;
         public virtual DbSet<MaterialesUbicacione> MaterialesUbicaciones { get; set; } = null!;
@@ -176,8 +176,7 @@ namespace CoreIndustriaHuitzil.Models
 
                 entity.Property(e => e.IdCategoria).HasColumnName("id_categoria");
 
-                entity.Property(e => e.IdTalla).HasColumnName("id_talla");
-
+          
                 entity.Property(e => e.IdUbicacion).HasColumnName("id_ubicacion");
 
                 entity.Property(e => e.Imagen)
@@ -201,10 +200,7 @@ namespace CoreIndustriaHuitzil.Models
                     .HasForeignKey(d => d.IdCategoria)
                     .HasConstraintName("FK_Articulos_Categorias");
 
-                entity.HasOne(d => d.IdTallaNavigation)
-                    .WithMany(p => p.Articulos)
-                    .HasForeignKey(d => d.IdTalla)
-                    .HasConstraintName("FK_Articulos_Tallas");
+             
 
                 entity.HasOne(d => d.IdUbicacionNavigation)
                     .WithMany(p => p.Articulos)
@@ -432,27 +428,7 @@ namespace CoreIndustriaHuitzil.Models
                     .HasDefaultValueSql("((1))");
             });
 
-            modelBuilder.Entity<CatTalla>(entity =>
-            {
-                entity.HasKey(e => e.IdTalla);
-
-                entity.Property(e => e.IdTalla).HasColumnName("id_talla");
-
-                entity.Property(e => e.Descripcion)
-                    .HasMaxLength(50)
-                    .IsUnicode(false)
-                    .HasColumnName("descripcion");
-
-                entity.Property(e => e.Nombre)
-                    .HasMaxLength(50)
-                    .IsUnicode(false)
-                    .HasColumnName("nombre");
-
-                entity.Property(e => e.Visible)
-                    .IsRequired()
-                    .HasColumnName("visible")
-                    .HasDefaultValueSql("((1))");
-            });
+        
 
             modelBuilder.Entity<CatUbicacione>(entity =>
             {
@@ -955,10 +931,7 @@ namespace CoreIndustriaHuitzil.Models
                    .HasForeignKey(d => d.IdCategoria)
                    .HasConstraintName("FK_Articulos_Categorias");
 
-                entity.HasOne(d => d.IdTallaNavigation)
-                    .WithMany(p => p.MovimientosArticulos)
-                    .HasForeignKey(d => d.IdTalla)
-                    .HasConstraintName("FK_Articulos_Tallas");
+             
 
                 entity.HasOne(d => d.IdUbicacionNavigation)
                     .WithMany(p => p.MovimientosArticulos)
@@ -971,7 +944,7 @@ namespace CoreIndustriaHuitzil.Models
                 entity.Property(e => e.IdArticulo).HasColumnName("id_articulo");
                 entity.Property(e => e.IdUbicacion).HasColumnName("id_ubicacion");
                 entity.Property(e => e.IdCategoria).HasColumnName("id_categoria");
-                entity.Property(e => e.IdTalla).HasColumnName("id_talla");
+    
                 entity.Property(e => e.FechaIngreso).HasColumnName("fecha_ingreso");
              
 

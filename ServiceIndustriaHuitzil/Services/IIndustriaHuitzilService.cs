@@ -118,12 +118,7 @@ namespace ServiceIndustriaHuitzil.Services
         Task<ResponseModel> deleteSolicitudMaterial(SolicitudesMaterialesRequest material);
         #endregion
 
-        #region Tallas
-        Task<ResponseModel> getTallas();
-        Task<ResponseModel> postTalla(TallaRequest talla);
-        Task<ResponseModel> putTalla(TallaRequest talla);
-        Task<ResponseModel> deleteTalla(TallaRequest talla);
-        #endregion
+      
 
         #region Ubicaciones
         Task<ResponseModel> getUbicaciones();

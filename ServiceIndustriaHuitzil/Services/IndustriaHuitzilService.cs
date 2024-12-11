@@ -752,7 +752,6 @@ namespace ServiceIndustriaHuitzil.Services
                             .Include(w => w.IdArticuloNavigation)
                             .Include(wa => wa.IdArticuloNavigation.IdUbicacionNavigation)
                             .Include(wb => wb.IdArticuloNavigation.IdCategoriaNavigation)
-                            .Include(wc => wc.IdArticuloNavigation.IdTallaNavigation)
                             .Where(x => x.IdVenta == result.IdVenta)
                             .ToListAsync();
 
@@ -785,8 +784,8 @@ namespace ServiceIndustriaHuitzil.Services
                                     FechaIngreso = (DateTime)x.IdArticuloNavigation.FechaIngreso,
                                     idUbicacion = (int)x.IdArticuloNavigation.IdUbicacion,
                                     idCategoria = (int)x.IdArticuloNavigation.IdCategoria,
-                                    idTalla = (int)x.IdArticuloNavigation.IdTalla,
-                                    talla = x.IdArticuloNavigation.IdTallaNavigation.Descripcion,
+                                  
+                                 
                                     categoria = x.IdArticuloNavigation.IdCategoriaNavigation.Descripcion,
                                     ubicacion = x.IdArticuloNavigation.IdUbicacionNavigation.Direccion,
                                     sku = x.IdArticuloNavigation.Sku,
@@ -852,9 +851,9 @@ namespace ServiceIndustriaHuitzil.Services
                             Subtotal = x.IdVentaNavigation.Subtotal,
                             Total = x.IdVentaNavigation.Total
                         },
-                        CambiosDevolucionesArticulos = _ctx.CambiosDevolucionesArticulos.Include(a => a.IdArticuloNavigation).ThenInclude(aa => aa.IdTallaNavigation)
+                        CambiosDevolucionesArticulos = _ctx.CambiosDevolucionesArticulos.Include(a => a.IdArticuloNavigation)
                                                                                         .Include(b => b.IdVentaArticuloNavigation).ThenInclude(ba => ba.IdArticuloNavigation)
-                                                                                        .ThenInclude(baa => baa.IdTallaNavigation).Where(y => y.IdCambioDevolucion == x.IdCambioDevolucion)
+                                                                                      .Where(y => y.IdCambioDevolucion == x.IdCambioDevolucion)
                                                                                         .ToList().ConvertAll(x => new CambiosDevolucionesArticuloRequest()
                         {
                             IdCambioArticulo = x.IdCambioArticulo,
@@ -876,8 +875,8 @@ namespace ServiceIndustriaHuitzil.Services
                                 FechaIngreso = (DateTime)x.IdArticuloNavigation.FechaIngreso,
                                 idUbicacion = (int)x.IdArticuloNavigation.IdUbicacion,
                                 idCategoria = (int)x.IdArticuloNavigation.IdCategoria,
-                                idTalla = (int)x.IdArticuloNavigation.IdTalla,
-                                talla = x.IdArticuloNavigation.IdTallaNavigation.Nombre,
+                            
+                         
                                 categoria = null,
                                 ubicacion = null,
                                 sku = x.IdArticuloNavigation.Sku,
@@ -901,8 +900,6 @@ namespace ServiceIndustriaHuitzil.Services
                                     FechaIngreso = (DateTime)x.IdVentaArticuloNavigation.IdArticuloNavigation.FechaIngreso,
                                     idUbicacion = (int)x.IdVentaArticuloNavigation.IdArticuloNavigation.IdUbicacion,
                                     idCategoria = (int)x.IdVentaArticuloNavigation.IdArticuloNavigation.IdCategoria,
-                                    idTalla = (int)x.IdVentaArticuloNavigation.IdArticuloNavigation.IdTalla,
-                                    talla = x.IdVentaArticuloNavigation.IdArticuloNavigation.IdTallaNavigation.Nombre,
                                     categoria = null,
                                     ubicacion = null,
                                     sku = x.IdVentaArticuloNavigation.IdArticuloNavigation.Sku,
@@ -2287,7 +2284,7 @@ namespace ServiceIndustriaHuitzil.Services
                 List<ProductoRequest> lista = new List<ProductoRequest>();
                 if (request == "all")
                 {
-                    lista = _ctx.Articulos.Include(a => a.IdTallaNavigation).Include(b=>b.IdCategoriaNavigation).Include(c=>c.IdUbicacionNavigation)
+                    lista = _ctx.Articulos.Include(b=>b.IdCategoriaNavigation).Include(c=>c.IdUbicacionNavigation)
                                                    .Where(x => x.IdArticulo!=null).ToList()
                                                    .ConvertAll(u => new ProductoRequest()
                                                    {
@@ -2296,11 +2293,9 @@ namespace ServiceIndustriaHuitzil.Services
                                                        Existencia=u.Existencia,
                                                        Descripcion=u.Descripcion,
                                                        FechaIngreso=(DateTime)u.FechaIngreso,
-                                                       idTalla=(int)u.IdTalla,
                                                        idCategoria=(int)u.IdCategoria,
                                                        idUbicacion=(int)u.IdUbicacion,
                                                        imagen=u.Imagen,
-                                                       talla = u.IdTallaNavigation.Nombre,
                                                        ubicacion= u.IdUbicacionNavigation.Direccion,
                                                        categoria = u.IdCategoriaNavigation.Descripcion,
                                                        precio = (decimal)u.Precio,
@@ -2309,7 +2304,7 @@ namespace ServiceIndustriaHuitzil.Services
                 }
                 else
                 {
-                    lista = _ctx.Articulos.Include(a => a.IdTallaNavigation).Include(b => b.IdCategoriaNavigation).Include(c => c.IdUbicacionNavigation)
+                    lista = _ctx.Articulos.Include(b => b.IdCategoriaNavigation).Include(c => c.IdUbicacionNavigation)
                                                    .Where(x => x.IdArticulo != null && x.IdUbicacionNavigation.Direccion == request).ToList()
                                                    .ConvertAll(u => new ProductoRequest()
                                                    {
@@ -2318,11 +2313,11 @@ namespace ServiceIndustriaHuitzil.Services
                                                        Existencia = u.Existencia,
                                                        Descripcion = u.Descripcion,
                                                        FechaIngreso = (DateTime)u.FechaIngreso,
-                                                       idTalla = (int)u.IdTalla,
+                                                   
                                                        idCategoria = (int)u.IdCategoria,
                                                        idUbicacion = (int)u.IdUbicacion,
                                                        imagen = u.Imagen,
-                                                       talla = u.IdTallaNavigation.Nombre,
+                                                     
                                                        ubicacion = u.IdUbicacionNavigation.Direccion,
                                                        categoria = u.IdCategoriaNavigation.Descripcion,
                                                        precio = (decimal)u.Precio,
@@ -2358,7 +2353,7 @@ namespace ServiceIndustriaHuitzil.Services
                 List<ProductoRequest> lista = new List<ProductoRequest>();
                 if (request == "all")
                 {
-                    lista = _ctx.Articulos.Include(a => a.IdTallaNavigation).Include(b => b.IdCategoriaNavigation).Include(c => c.IdUbicacionNavigation)
+                    lista = _ctx.Articulos.Include(b => b.IdCategoriaNavigation).Include(c => c.IdUbicacionNavigation)
                                                    .Where(x => x.IdArticulo != null && x.Existencia == "0").ToList()
                                                    .ConvertAll(u => new ProductoRequest()
                                                    {
@@ -2367,11 +2362,11 @@ namespace ServiceIndustriaHuitzil.Services
                                                        Existencia = u.Existencia,
                                                        Descripcion = u.Descripcion,
                                                        FechaIngreso = (DateTime)u.FechaIngreso,
-                                                       idTalla = (int)u.IdTalla,
+                                                      
                                                        idCategoria = (int)u.IdCategoria,
                                                        idUbicacion = (int)u.IdUbicacion,
                                                        imagen = u.Imagen,
-                                                       talla = u.IdTallaNavigation.Nombre,
+                                                   
                                                        ubicacion = u.IdUbicacionNavigation.Direccion,
                                                        categoria = u.IdCategoriaNavigation.Descripcion,
                                                        precio = (decimal)u.Precio,
@@ -2380,7 +2375,7 @@ namespace ServiceIndustriaHuitzil.Services
                 }
                 else
                 {
-                    lista = _ctx.Articulos.Include(a => a.IdTallaNavigation).Include(b => b.IdCategoriaNavigation).Include(c => c.IdUbicacionNavigation)
+                    lista = _ctx.Articulos.Include(b => b.IdCategoriaNavigation).Include(c => c.IdUbicacionNavigation)
                                                    .Where(x => x.IdArticulo != null && x.IdUbicacionNavigation.Direccion == request).ToList()
                                                    .ConvertAll(u => new ProductoRequest()
                                                    {
@@ -2389,11 +2384,11 @@ namespace ServiceIndustriaHuitzil.Services
                                                        Existencia = u.Existencia,
                                                        Descripcion = u.Descripcion,
                                                        FechaIngreso = (DateTime)u.FechaIngreso,
-                                                       idTalla = (int)u.IdTalla,
+                                                     
                                                        idCategoria = (int)u.IdCategoria,
                                                        idUbicacion = (int)u.IdUbicacion,
                                                        imagen = u.Imagen,
-                                                       talla = u.IdTallaNavigation.Nombre,
+                                                     
                                                        ubicacion = u.IdUbicacionNavigation.Direccion,
                                                        categoria = u.IdCategoriaNavigation.Descripcion,
                                                        precio = (decimal)u.Precio,
@@ -2441,7 +2436,7 @@ namespace ServiceIndustriaHuitzil.Services
                     existeArticulo.Existencia = result.ToString();
                     existeArticulo.IdUbicacion = request.idUbicacion;
                     existeArticulo.IdCategoria = request.idCategoria;
-                    existeArticulo.IdTalla = request.idTalla;
+                   // existeArticulo.IdTalla = request.idTalla;
                     existeArticulo.Sku = request.sku;
                     existeArticulo.Precio = request.precio;
                     existeArticulo.Imagen = request.imagen;
@@ -2462,7 +2457,7 @@ namespace ServiceIndustriaHuitzil.Services
                     newArticulo.Existencia = request.Existencia;
                     newArticulo.IdUbicacion = request.idUbicacion;
                     newArticulo.IdCategoria = request.idCategoria;
-                    newArticulo.IdTalla = request.idTalla;
+                 //   newArticulo.IdTalla = request.idTalla;
                     newArticulo.Imagen = request.imagen;
                     newArticulo.Precio = request.precio;
                     newArticulo.Sku = request.sku;
@@ -2505,7 +2500,7 @@ namespace ServiceIndustriaHuitzil.Services
                     existeArticulo.Existencia = request.Existencia;
                     existeArticulo.IdUbicacion =request.idUbicacion;
                     existeArticulo.IdCategoria = request.idCategoria;
-                    existeArticulo.IdTalla = request.idTalla;
+                  
                     existeArticulo.Sku = request.sku;
                     existeArticulo.Precio = request.precio;
                     existeArticulo.Imagen = request.imagen;
@@ -2578,18 +2573,18 @@ namespace ServiceIndustriaHuitzil.Services
 
                 if (sucursal == "all")
                 {
-                    resultsByName = _ctx.Articulos.Include(a => a.IdTallaNavigation).Include(b => b.IdCategoriaNavigation).Include(c => c.IdUbicacionNavigation)
+                    resultsByName = _ctx.Articulos.Include(b => b.IdCategoriaNavigation).Include(c => c.IdUbicacionNavigation)
                                                   .Where(x => x.Descripcion.ToLower().Contains(queryString.ToLower())).ToList();
 
-                    resultsBySku = _ctx.Articulos.Include(a => a.IdTallaNavigation).Include(b => b.IdCategoriaNavigation).Include(c => c.IdUbicacionNavigation)
+                    resultsBySku = _ctx.Articulos.Include(b => b.IdCategoriaNavigation).Include(c => c.IdUbicacionNavigation)
                                                  .Where(x => x.Sku.ToLower().Contains(queryString.ToLower())).ToList();
                 }
                 else
                 {
-                    resultsByName = _ctx.Articulos.Include(a => a.IdTallaNavigation).Include(b => b.IdCategoriaNavigation).Include(c => c.IdUbicacionNavigation)
+                    resultsByName = _ctx.Articulos.Include(b => b.IdCategoriaNavigation).Include(c => c.IdUbicacionNavigation)
                                                 .Where(x => x.Descripcion.ToLower().Contains(queryString.ToLower()) && x.IdUbicacionNavigation.Direccion == sucursal).ToList();
 
-                    resultsBySku = _ctx.Articulos.Include(a => a.IdTallaNavigation).Include(b => b.IdCategoriaNavigation).Include(c => c.IdUbicacionNavigation)
+                    resultsBySku = _ctx.Articulos.Include(b => b.IdCategoriaNavigation).Include(c => c.IdUbicacionNavigation)
                                                 .Where(x => x.Sku.ToLower().Contains(queryString.ToLower()) && x.IdUbicacionNavigation.Direccion == sucursal).ToList();
                 }
 
@@ -2604,11 +2599,10 @@ namespace ServiceIndustriaHuitzil.Services
                             Existencia = product.Existencia,
                             Descripcion = product.Descripcion,
                             FechaIngreso = (DateTime)product.FechaIngreso,
-                            idTalla = (int)product.IdTalla,
                             idCategoria = (int)product.IdCategoria,
                             idUbicacion = (int)product.IdUbicacion,
                             imagen = product.Imagen,
-                            talla = product.IdTallaNavigation.Nombre,
+                       
                             ubicacion = product.IdUbicacionNavigation.Direccion,
                             categoria = product.IdCategoriaNavigation.Descripcion,
                             precio = (decimal)product.Precio,
@@ -2626,11 +2620,11 @@ namespace ServiceIndustriaHuitzil.Services
                                 Existencia = product.Existencia,
                                 Descripcion = product.Descripcion,
                                 FechaIngreso = (DateTime)product.FechaIngreso,
-                                idTalla = (int)product.IdTalla,
+                               
                                 idCategoria = (int)product.IdCategoria,
                                 idUbicacion = (int)product.IdUbicacion,
                                 imagen = product.Imagen,
-                                talla = product.IdTallaNavigation.Nombre,
+                             
                                 ubicacion = product.IdUbicacionNavigation.Direccion,
                                 categoria = product.IdCategoriaNavigation.Descripcion,
                                 precio = (decimal)product.Precio,
@@ -2666,7 +2660,7 @@ namespace ServiceIndustriaHuitzil.Services
               
                 // Construir la consulta base
                 var query = _ctx.Articulos
-                                .Include(a => a.IdTallaNavigation)
+                               
                                 .Include(b => b.IdCategoriaNavigation)
                                 .Include(c => c.IdUbicacionNavigation)
                                 .AsQueryable();
@@ -2695,7 +2689,7 @@ namespace ServiceIndustriaHuitzil.Services
                     int tallaId;
                     if (int.TryParse(filters.Talla, out tallaId)) // Convertir la talla en entero
                     {
-                        query = query.Where(x => x.IdTalla == tallaId); // Filtrar por ID de talla
+                     
                     }
                 }
 
@@ -2735,11 +2729,11 @@ namespace ServiceIndustriaHuitzil.Services
                         Existencia = product.Existencia,
                         Descripcion = product.Descripcion,
                         FechaIngreso = (DateTime)product.FechaIngreso,
-                        idTalla = (int)product.IdTalla,
+                     
                         idCategoria = (int)product.IdCategoria,
                         idUbicacion = (int)product.IdUbicacion,
                         imagen = product.Imagen,
-                        talla = product.IdTallaNavigation.Nombre,
+                       
                         ubicacion = product.IdUbicacionNavigation.Direccion,
                         categoria = product.IdCategoriaNavigation.Descripcion,
                         precio = (decimal)product.Precio,
@@ -2776,15 +2770,15 @@ namespace ServiceIndustriaHuitzil.Services
 
                 if (sucursal == "all")
                 {
-                    resultsByName = _ctx.Articulos.Include(a => a.IdTallaNavigation).Include(b => b.IdCategoriaNavigation).Include(c => c.IdUbicacionNavigation)
+                    resultsByName = _ctx.Articulos.Include(b => b.IdCategoriaNavigation).Include(c => c.IdUbicacionNavigation)
                                                 .ToList();
 
-                    resultsBySku = _ctx.Articulos.Include(a => a.IdTallaNavigation).Include(b => b.IdCategoriaNavigation).Include(c => c.IdUbicacionNavigation)
+                    resultsBySku = _ctx.Articulos.Include(b => b.IdCategoriaNavigation).Include(c => c.IdUbicacionNavigation)
                                                  .ToList();
                 }
-                resultsByName = _ctx.Articulos.Include(a => a.IdTallaNavigation).Include(b => b.IdCategoriaNavigation).Include(c => c.IdUbicacionNavigation)
+                resultsByName = _ctx.Articulos.Include(b => b.IdCategoriaNavigation).Include(c => c.IdUbicacionNavigation)
                                                 .Where(x =>  x.IdUbicacionNavigation.Direccion == sucursal).ToList();
-                    resultsBySku = _ctx.Articulos.Include(a => a.IdTallaNavigation).Include(b => b.IdCategoriaNavigation).Include(c => c.IdUbicacionNavigation)
+                    resultsBySku = _ctx.Articulos.Include(b => b.IdCategoriaNavigation).Include(c => c.IdUbicacionNavigation)
                                                 .Where(x => x.IdUbicacionNavigation.Direccion == sucursal).ToList();
                 
 
@@ -2799,11 +2793,10 @@ namespace ServiceIndustriaHuitzil.Services
                             Existencia = product.Existencia,
                             Descripcion = product.Descripcion,
                             FechaIngreso = (DateTime)product.FechaIngreso,
-                            idTalla = (int)product.IdTalla,
                             idCategoria = (int)product.IdCategoria,
                             idUbicacion = (int)product.IdUbicacion,
                             imagen = product.Imagen,
-                            talla = product.IdTallaNavigation.Nombre,
+                          
                             ubicacion = product.IdUbicacionNavigation.Direccion,
                             categoria = product.IdCategoriaNavigation.Descripcion,
                             precio = (decimal)product.Precio,
@@ -2821,11 +2814,11 @@ namespace ServiceIndustriaHuitzil.Services
                                 Existencia = product.Existencia,
                                 Descripcion = product.Descripcion,
                                 FechaIngreso = (DateTime)product.FechaIngreso,
-                                idTalla = (int)product.IdTalla,
+                            
                                 idCategoria = (int)product.IdCategoria,
                                 idUbicacion = (int)product.IdUbicacion,
                                 imagen = product.Imagen,
-                                talla = product.IdTallaNavigation.Nombre,
+                               
                                 ubicacion = product.IdUbicacionNavigation.Direccion,
                                 categoria = product.IdCategoriaNavigation.Descripcion,
                                 precio = (decimal)product.Precio,
@@ -3447,130 +3440,8 @@ namespace ServiceIndustriaHuitzil.Services
         }
         #endregion
 
-        #region Tallas
-        public async Task<ResponseModel> getTallas()
-        {
-            ResponseModel response = new ResponseModel();
-            try
-            {
-                response.exito = false;
-                response.mensaje = "";
-                response.respuesta = "[]";
+      
 
-                List<CatTalla> lista = await _ctx.CatTallas.Where(x => x.Visible == true).ToListAsync();
-                if (lista != null)
-                {
-                    response.exito = true;
-                    response.mensaje = "Se han consultado exitosamente las tallas!!";
-                    response.respuesta = lista;
-                }
-            }
-            catch (Exception e)
-            {
-                Console.WriteLine(e.Message);
-                response.mensaje = e.Message;
-                response.exito = false;
-                response.respuesta = "[]";
-            }
-            return response;
-        }
-
-        public async Task<ResponseModel> postTalla(TallaRequest request)
-        {
-            ResponseModel response = new ResponseModel();
-            try
-            {
-                response.exito = false;
-                response.mensaje = "No se pudo insertar la nueva talla";
-                response.respuesta = "[]";
-
-                CatTalla newTalla = new CatTalla();
-                newTalla.Nombre = request.Nombre;
-                newTalla.Descripcion = request.Descripcion;
-
-                _ctx.CatTallas.Add(newTalla);
-                await _ctx.SaveChangesAsync();
-
-                response.exito = true;
-                response.mensaje = "Se insertó la talla correctamente!!";
-                response.respuesta = newTalla;
-            }
-            catch (Exception e)
-            {
-                Console.WriteLine(e.Message);
-                response.mensaje = e.Message;
-                response.exito = false;
-                response.respuesta = "[]";
-            }
-            return response;
-        }
-
-        public async Task<ResponseModel> putTalla(TallaRequest request)
-        {
-            ResponseModel response = new ResponseModel();
-            try
-            {
-                response.exito = false;
-                response.mensaje = "No se pudo actualizar la talla";
-                response.respuesta = "[]";
-
-                CatTalla existeTalla = _ctx.CatTallas.FirstOrDefault(x => x.IdTalla == request.IdTalla);
-
-                if (existeTalla != null)
-                {
-                    existeTalla.Nombre = request.Nombre;
-                    existeTalla.Descripcion = request.Descripcion;
-
-                    _ctx.CatTallas.Update(existeTalla);
-                    await _ctx.SaveChangesAsync();
-
-                    response.exito = true;
-                    response.mensaje = "Se actualizó la talla correctamente!!";
-                    response.respuesta = existeTalla;
-                }
-            }
-            catch (Exception e)
-            {
-                Console.WriteLine(e.Message);
-                response.mensaje = e.Message;
-                response.exito = false;
-                response.respuesta = "[]";
-            }
-            return response;
-        }
-
-        public async Task<ResponseModel> deleteTalla(TallaRequest request)
-        {
-            ResponseModel response = new ResponseModel();
-            try
-            {
-                response.exito = false;
-                response.mensaje = "No se pudo eliminar la talla";
-                response.respuesta = "[]";
-
-                CatTalla existeTalla = _ctx.CatTallas.FirstOrDefault(x => x.IdTalla == request.IdTalla);
-
-                if (existeTalla != null)
-                {
-                    existeTalla.Visible = false;
-                    _ctx.CatTallas.Update(existeTalla);
-                    await _ctx.SaveChangesAsync();
-
-                    response.exito = true;
-                    response.mensaje = "Se eliminó la talla correctamente!!";
-                    response.respuesta = "[]";
-                }
-            }
-            catch (Exception e)
-            {
-                Console.WriteLine(e.Message);
-                response.mensaje = e.Message;
-                response.exito = false;
-                response.respuesta = "[]";
-            }
-            return response;
-        }
-        #endregion
 
         #region Ubicaciones
         public async Task<ResponseModel> getUbicaciones()
@@ -4505,7 +4376,7 @@ namespace ServiceIndustriaHuitzil.Services
                         List<VentaArticulo> articulosVenta = _ctx.VentaArticulos.Include(w => w.IdArticuloNavigation)
                                                                             .Include(wa => wa.IdArticuloNavigation.IdUbicacionNavigation)
                                                                             .Include(wb => wb.IdArticuloNavigation.IdCategoriaNavigation)
-                                                                            .Include(wc => wc.IdArticuloNavigation.IdTallaNavigation)
+                                                                           
                                                                             .Where(x => x.IdVenta == venta.IdVenta).ToList();
 
                       List<CambiosDevolucione> cambiosventaVenta = _ctx.CambiosDevoluciones.Include(w => w.IdVentaNavigation)
@@ -4536,9 +4407,9 @@ namespace ServiceIndustriaHuitzil.Services
                                 Subtotal = x.IdVentaNavigation.Subtotal,
                                 Total = x.IdVentaNavigation.Total
                             },
-                            CambiosDevolucionesArticulos = _ctx.CambiosDevolucionesArticulos.Include(a => a.IdArticuloNavigation).ThenInclude(aa => aa.IdTallaNavigation)
+                            CambiosDevolucionesArticulos = _ctx.CambiosDevolucionesArticulos.Include(a => a.IdArticuloNavigation)
                                                                                         .Include(b => b.IdVentaArticuloNavigation).ThenInclude(ba => ba.IdArticuloNavigation)
-                                                                                        .ThenInclude(baa => baa.IdTallaNavigation).Where(y => y.IdCambioDevolucion == x.IdCambioDevolucion)
+                                                                                        .Where(y => y.IdCambioDevolucion == x.IdCambioDevolucion)
                                                                                         .ToList().ConvertAll(x => new CambiosDevolucionesArticuloRequest()
                                                                                         {
                                                                                             IdCambioArticulo = x.IdCambioArticulo,
@@ -4560,8 +4431,8 @@ namespace ServiceIndustriaHuitzil.Services
                                                                                                 FechaIngreso = (DateTime)x.IdArticuloNavigation.FechaIngreso,
                                                                                                 idUbicacion = (int)x.IdArticuloNavigation.IdUbicacion,
                                                                                                 idCategoria = (int)x.IdArticuloNavigation.IdCategoria,
-                                                                                                idTalla = (int)x.IdArticuloNavigation.IdTalla,
-                                                                                                talla = x.IdArticuloNavigation.IdTallaNavigation.Nombre,
+                                                                                             
+                                                                                         
                                                                                                 categoria = null,
                                                                                                 ubicacion = null,
                                                                                                 sku = x.IdArticuloNavigation.Sku,
@@ -4585,8 +4456,7 @@ namespace ServiceIndustriaHuitzil.Services
                                                                                                     FechaIngreso = (DateTime)x.IdVentaArticuloNavigation.IdArticuloNavigation.FechaIngreso,
                                                                                                     idUbicacion = (int)x.IdVentaArticuloNavigation.IdArticuloNavigation.IdUbicacion,
                                                                                                     idCategoria = (int)x.IdVentaArticuloNavigation.IdArticuloNavigation.IdCategoria,
-                                                                                                    idTalla = (int)x.IdVentaArticuloNavigation.IdArticuloNavigation.IdTalla,
-                                                                                                    talla = x.IdVentaArticuloNavigation.IdArticuloNavigation.IdTallaNavigation.Nombre,
+                                                                                         
                                                                                                     categoria = null,
                                                                                                     ubicacion = null,
                                                                                                     sku = x.IdVentaArticuloNavigation.IdArticuloNavigation.Sku,
@@ -4614,9 +4484,7 @@ namespace ServiceIndustriaHuitzil.Services
                                 Descripcion = x.IdArticuloNavigation.Descripcion,
                                 FechaIngreso = (DateTime)x.IdArticuloNavigation.FechaIngreso,
                                 idUbicacion = (int)x.IdArticuloNavigation.IdUbicacion,
-                                idCategoria = (int)x.IdArticuloNavigation.IdCategoria,
-                                idTalla = (int)x.IdArticuloNavigation.IdTalla,
-                                talla = x.IdArticuloNavigation.IdTallaNavigation.Descripcion,
+
                                 categoria = x.IdArticuloNavigation.IdCategoriaNavigation.Descripcion,
                                 ubicacion = x.IdArticuloNavigation.IdUbicacionNavigation.Direccion,
                                 sku = x.IdArticuloNavigation.Sku,
@@ -4757,7 +4625,7 @@ namespace ServiceIndustriaHuitzil.Services
                         UsuarioRecibe = u.IdUbicacionDestinoNavigation.NombreEncargado,
                         TipoPaquete = u.TipoPaquete,
                         TotalPiezas = u.TotalPiezas,
-                        movimientoArticulos = _ctx.MovimientoArticulos.Where(x => x.idMovimiento == u.IdMovimiento).Include(a => a.IdTallaNavigation).Include(b => b.IdCategoriaNavigation).Include(c => c.IdUbicacionNavigation).ToList()
+                        movimientoArticulos = _ctx.MovimientoArticulos.Where(x => x.idMovimiento == u.IdMovimiento).Include(b => b.IdCategoriaNavigation).Include(c => c.IdUbicacionNavigation).ToList()
                         .ConvertAll(u => new MovimientoArticulosRequest()
                         {
                             IdMovimientoArticulos = u.IdMovimientoArticulos,
@@ -4769,9 +4637,8 @@ namespace ServiceIndustriaHuitzil.Services
                             FechaIngreso = u.FechaIngreso,
                             IdUbicacion = u.IdUbicacion,
                             IdCategoria = u.IdCategoria,
-                            IdTalla = u.IdTalla,
                             Imagen = u.Imagen,
-                            talla = u.IdTallaNavigation.Nombre,
+                          
                             ubicacion = u.IdUbicacionNavigation.Direccion,
                             categoria = u.IdCategoriaNavigation.Descripcion,
                             Sku = u.Sku,
@@ -5060,7 +4927,7 @@ namespace ServiceIndustriaHuitzil.Services
                                 x.Sku == dataArticulo.Sku & 
                                 x.IdUbicacion == request.UbicacionDestino & 
                                 x.IdCategoria == dataArticulo.IdCategoria &
-                                x.IdTalla == dataArticulo.IdTalla &
+                             
                                 x.Descripcion == dataArticulo.Descripcion
                                 );
 
@@ -5094,7 +4961,7 @@ namespace ServiceIndustriaHuitzil.Services
                                     newArticulo.FechaIngreso = dataArticulo.FechaIngreso; 
                                     newArticulo.IdUbicacion = request.UbicacionDestino;
                                     newArticulo.IdCategoria = dataArticulo.IdCategoria;
-                                    newArticulo.IdTalla = dataArticulo.IdTalla;
+                                    
                                     newArticulo.Imagen = dataArticulo.Imagen;
                                     newArticulo.Sku = dataArticulo.Sku;
                                     newArticulo.Precio = dataArticulo.Precio;

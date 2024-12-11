@@ -15,8 +15,7 @@ namespace CoreIndustriaHuitzil.ModelsRequest
         public DateTime FechaIngreso { get; set; }
         public int idUbicacion { get; set; }
         public int idCategoria { get; set; }
-        public int idTalla { get; set; }
-        public string talla { get; set; } 
+     
         public string categoria { get; set; }
         public string ubicacion { get; set; }
         public string sku { get; set; }
